@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd front-end && npm run build"
+    "build": "cd front-end && npm run build",
+    "serve": "cd front-end && npm run serve",
+    "seed": "node database/seed"
   },
   "author": "",
   "license": "ISC",

@@ -1,5 +1,6 @@
 const path = require('path')
 const glob = require("glob")
+require('dotenv').config()
 const configDB = require('../config')
 const mongoose = require('mongoose');
 async function seed() {
