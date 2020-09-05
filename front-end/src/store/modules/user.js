@@ -3,8 +3,7 @@ import axios from 'axios'
 const state = () => ({
     token: localStorage.getItem("token"),
     refresh_token: localStorage.getItem("refresh_token"),
-    info_login: localStorage.getItem("info_login"),
-    user_info: localStorage.getItem("user_info"),
+    user_info: JSON.parse(localStorage.getItem("user_info")),
 })
 
 const getters = {
@@ -32,8 +31,8 @@ const actions = {
                 localStorage.setItem('token', res.data.user.tokenData.token)
                 localStorage.setItem('refresh_token', res.data.user.tokenData.refreshToken)
                 localStorage.setItem('user_info', JSON.stringify(res.data.user))
-                store.commit('setToken', res.data.user.token)
-                store.commit('setRefreshToken', res.data.user.refreshToken)
+                store.commit('setToken', res.data.user.tokenData.token)
+                store.commit('setRefreshToken', res.data.user.tokenData.refreshToken)
                 store.commit('setUserInfo', res.data.user)
                 return res
             })

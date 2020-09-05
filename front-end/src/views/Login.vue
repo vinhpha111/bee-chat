@@ -38,8 +38,7 @@ export default {
             }
             this.$store.commit('setLoading', true)
             this.$store.dispatch('loginUser', dataSubmit)
-                .then(data => {
-                    console.log(data)
+                .then(() => {
                     this.$store.commit('setLoading', false)
                     this.$router.push({ name: 'Home' })
                 })
