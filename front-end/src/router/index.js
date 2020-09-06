@@ -5,13 +5,7 @@ import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
-  const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home,
-    meta: { auth: [1, 2] }
-  },
+const routes = [
   {
     path: '/about',
     name: 'About',
@@ -27,6 +21,21 @@ Vue.use(VueRouter)
     name: 'admin',
     component: () => import('../views/admin/index.vue'),
     meta: { auth: [1] }
+  },
+
+  {
+    path: '/',
+    name: 'Home',
+    component: Home,
+    meta: { auth: [1, 2] },
+    children: [
+      {
+        path: '/room/:slug',
+        name: 'Room',
+        component: () => import('../views/room/index.vue'),
+        meta: { auth: [1] },
+      }
+    ]
   },
 
   {

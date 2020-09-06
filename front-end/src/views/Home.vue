@@ -1,6 +1,12 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
+  <div class="chat-main">
+    <div :class="['left-bar', {show: isShowSideBar}]">
+      <img @click="isShowSideBar = !isShowSideBar" class="sidebar-toggle-btn" src="../assets/images/menu-button-sidebar.png"/>
+      this is side bar
+    </div>
+    <div class="right-bar">
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -9,10 +15,13 @@ export default {
   name: 'Home',
   components: {
   },
+  data() {
+    return {
+      isShowSideBar: false
+    }
+  },
   async created() {
-    this.$store.dispatch('getUser').then(res => {
-      console.log(res)
-    })
+    
   },
 }
 </script>

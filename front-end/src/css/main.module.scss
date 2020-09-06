@@ -1,0 +1,57 @@
+body {
+    margin: 0px;
+}
+.chat-main {
+    width: 100%;
+    display: inline-flex;
+    .left-bar {
+        width: 25%;
+        height: 100vh;
+        display: flex;
+        background-color: white;
+        position: relative;
+        transition: width 0.5s;
+        .sidebar-toggle-btn {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 3px;
+            right: 3px;
+            cursor: pointer;
+            display: none;
+        }
+    }
+    .right-bar {
+        width: 75%;
+        height: 100vh;
+        background-color: darkgrey;
+        display: flex;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .chat-main {
+        .left-bar {
+            width: 0px;
+            max-width: 100%;
+            overflow-x: hidden;
+            position: fixed;
+            .sidebar-toggle-btn {
+                position: fixed;
+                left: 3px;
+                display: block;
+            }
+            &.show {
+                width: 300px;
+                .sidebar-toggle-btn {
+                    position: absolute;
+                    right: 3px;
+                    left: unset;
+                }
+            }
+        }
+        .right-bar {
+            width: 100%;
+        }
+    }
+}
