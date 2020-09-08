@@ -1,21 +1,19 @@
 <template>
     <div class="auth-page">
         <div class="login-box">
-            <h4 class="header">Login</h4>
-            <p v-if="errors.not_exist_user" class="error">{{errors.not_exist_user}}</p>
-            <div class="row">
-                <label>Email:</label>
-                <input v-model="email" placeholder="Email"/>
+            <div class="w3-container w3-teal">
+                <h4 class="w3-center">Login</h4>
             </div>
-            <p v-if="errors.email" class="error">{{errors.email}}</p>
-            <div class="row">
-                <label>Password:</label>
-                <input v-model="password" type="password" placeholder="Password"/>
-            </div>
-            <p v-if="errors.password" class="error">{{errors.password}}</p>
-            <div class="footer">
-                <router-link class="btn btn-register" to="/register">Register</router-link>
-                <button @click="login" class="btn btn-login">Let login</button>
+            <div>
+                <i v-if="errors.not_exist_user" class="w3-text-red">{{errors.not_exist_user}}</i><p/>
+                <label class="w3-text-blue">Email</label>
+                <input class="w3-input w3-border" type="text" v-model="email">
+                <i v-if="errors.email" class="w3-text-red">{{errors.email}}</i><p/>
+                <label class="w3-text-blue">Password</label>
+                <input type="password" class="w3-input w3-border" v-model="password">
+                <i v-if="errors.password" class="w3-text-red">{{errors.password}}</i>
+                <p/>
+                <button @click="login" class="w3-btn w3-green w3-block">Let login</button>
             </div>
         </div>
     </div>

@@ -1,3 +1,6 @@
 {
-  "message": "Chào i18n !!"
+  "message": "Chào i18n !!",
+  "sidebar": {
+    "romm_label": "Phòng chat"
+  }
 }

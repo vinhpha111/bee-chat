@@ -3,7 +3,7 @@ import axios from 'axios'
 const state = () => ({
     token: localStorage.getItem("token"),
     refresh_token: localStorage.getItem("refresh_token"),
-    user_info: JSON.parse(localStorage.getItem("user_info")),
+    user_info: null
 })
 
 const getters = {
@@ -14,9 +14,11 @@ const getters = {
 
 const mutations = {
     setToken: (state, token) => {
+        localStorage.setItem('token', token)
         state.token = token
     },
     setRefreshToken: (state, refreshToken) => {
+        localStorage.setItem('refresh_token', refreshToken)
         state.token = refreshToken
     },
     setUserInfo: (state, userInfo) => {
@@ -28,9 +30,6 @@ const actions = {
     loginUser: (store, data) => {
         return axios.post('user/login', data)
             .then(res => {
-                localStorage.setItem('token', res.data.user.tokenData.token)
-                localStorage.setItem('refresh_token', res.data.user.tokenData.refreshToken)
-                localStorage.setItem('user_info', JSON.stringify(res.data.user))
                 store.commit('setToken', res.data.user.tokenData.token)
                 store.commit('setRefreshToken', res.data.user.tokenData.refreshToken)
                 store.commit('setUserInfo', res.data.user)

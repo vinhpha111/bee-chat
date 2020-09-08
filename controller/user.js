@@ -20,6 +20,6 @@ module.exports = {
     },
     getAuthInfo: async (req, res) => {
         let user = await userModel.findById(req.userInfo._id)
-        res.json(user)
+        return res.json(user)
     }
 }

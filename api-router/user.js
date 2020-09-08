@@ -1,9 +1,9 @@
 var express = require('express')
 var router = express.Router()
 var userController = require('../controller/user')
-let userAuth = require('../controller/requestValidation/authUser')
+let requiredAuth = require('../controller/auth/requiredAuth')
 
 router.post('/login', require('../controller/requestValidation/login'), userController.login)
-router.get('/get-auth-user-info', userAuth, userController.getAuthInfo)
+router.get('/get-auth-user-info', requiredAuth(), userController.getAuthInfo)
 
 module.exports = router

@@ -32,8 +32,7 @@ const routes = [
       {
         path: '/room/:slug',
         name: 'Room',
-        component: () => import('../views/room/index.vue'),
-        meta: { auth: [1] },
+        component: () => import('../views/room/index.vue')
       }
     ]
   },
@@ -51,9 +50,21 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   let auth = to.meta.auth
   let currentUser = store.getters.getUserInfo
+  if (!currentUser) {
+    try {
+      const userResponse = await store.dispatch('getUser')
+      if (userResponse) {
+        currentUser = userResponse.data
+        store.commit('setUserInfo', currentUser)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   if (auth) {
     if (currentUser && auth.indexOf(currentUser.role) !== -1) {
       next()

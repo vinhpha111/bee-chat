@@ -3,7 +3,7 @@ const app = express()
 const path = require('path');
 require('dotenv').config()
 const port = process.env.PORT || 4000
-if (process.env.ENV && process.env.ENV === 'local') {
+if (process.env.ENV && process.env.ENV !== 'production') {
   var cors = require('cors')
   app.use(cors())
 }

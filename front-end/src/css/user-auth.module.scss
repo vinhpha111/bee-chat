@@ -11,54 +11,6 @@
         margin: 100px auto 0px auto;
         background-color: white;
         padding: 5px;
-        .header {
-            margin: 5px 0px;
-        }
-        .row {
-            display: flex;
-            margin-top: 10px;
-            label {
-                width: 25%;
-            }
-            input {
-                width: 75%;
-                outline: none;
-                height: 22px;
-            }
-        }
-        .error {
-            color: red;
-            text-align: left;
-            margin: 0px 0px 0px 25%;
-            font-style: italic;
-        }
-        .footer {
-            margin-top: 10px;
-            $btn-color: black;
-            .btn {
-                margin: 0px 5px;
-                font-size: 13px;
-                border: 1px solid darkcyan;
-                padding: 4px 7px;
-                background-color: white;
-                cursor: pointer;
-                opacity: 0.9;
-                text-decoration: none;
-                outline: none;
-                color: $btn-color;
-                &.btn-login {
-                    background-color: orangered;
-                }
-                &.btn-register {
-                    background-color: lightblue;
-                }
-            }
-            .btn:hover {
-                opacity: 1;
-            }
-            .btn:active {
-                color: $btn-color;
-            }
-        }
+        text-align: left;
     }
 }
