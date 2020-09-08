@@ -1,6 +1,7 @@
 {
   "message": "Chào i18n !!",
   "sidebar": {
-    "romm_label": "Phòng chat"
+    "romm_label": "Phòng chat",
+    "saved_link": "Đã lưu"
   }
 }

@@ -1,5 +1,6 @@
 const roomUserModel = require('../model/roomUser')
-const roomUser = require('../model/roomUser')
+const roomModel = require('../model/room')
+
 module.exports = {
     getRoomByUser: async (userId) => {
         let roomUserList = await roomUserModel.find({user: userId}).populate('room').exec()
@@ -8,5 +9,9 @@ module.exports = {
             rooms.push(roomUserList[i].room)
         }
         return rooms
+    },
+    getRoomBySlug: async (slug) => {
+        const room = await roomModel.findOne({slug})
+        return room
     }
 }

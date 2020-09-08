@@ -32,7 +32,8 @@ const routes = [
       {
         path: '/room/:slug',
         name: 'Room',
-        component: () => import('../views/room/index.vue')
+        component: () => import('../views/room/index.vue'),
+        meta: { auth: [1, 2] }
       }
     ]
   },

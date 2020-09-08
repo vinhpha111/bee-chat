@@ -1,6 +1,7 @@
 {
   "message": "hello i18n !!",
   "sidebar": {
-    "romm_label": "Room"
+    "romm_label": "Room",
+    "saved_link": "Saved"
   }
 }

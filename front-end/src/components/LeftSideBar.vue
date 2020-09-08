@@ -5,6 +5,9 @@
         </div>
         <div class="main">
             <ul class="w3-ul w3-border">
+                <li><router-link :to="''">{{$t('sidebar.saved_link')}}</router-link><img class="w3-right" src="../assets/images/star-icon.png"></li>
+            </ul>
+            <ul class="w3-ul w3-border">
                 <li class="w3-green w3-center">{{ $t('sidebar.romm_label') }}</li>
                 <li v-for="(room, index) in listRoom" :key="index">
                     <router-link :to="`/room/${room.slug}`">{{room.name}}</router-link>
