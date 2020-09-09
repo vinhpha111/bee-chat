@@ -17,6 +17,42 @@ axios.interceptors.request.use(function (config) {
   return config;
 });
 
+axios.interceptors.response.use(
+  response => response,
+  async error => {
+      // Reject promise if usual error
+      if (error.response.status !== 403) {
+          return Promise.reject(error);
+      }
+
+      if (!store.getters.beingRefreshToken && store.getters.getRefreshToken) {
+        await store.commit('setBeingRefreshToken', true)
+        store.dispatch('getToken').then(res => {
+          store.commit('setToken', res.data.token)
+          store.commit('setRefreshToken', res.data.refreshToken)
+          store.commit('setBeingRefreshToken', false)
+        }).catch((err) => {
+          store.commit('setToken', null)
+          store.commit('setRefreshToken', null)
+          store.commit('setBeingRefreshToken', false)
+        })
+      }
+      
+      await timeout(500)
+
+      if (store.getters.getToken || store.getters.beingRefreshToken) {
+        error.response.config.headers['Authorization'] = 'Bearer ' + store.getters.getToken;
+        return axios(error.response.config);
+      }
+
+      return Promise.reject(error);
+  }
+)
+
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 new Vue({
   router,
   store,

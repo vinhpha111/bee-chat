@@ -9,20 +9,28 @@ module.exports = {
         }
         return false
     },
-    getToken: async (id) => {
-        let user = await userModel.findById(id);
-        if (user) {
-            console.log(user.toJSON())
+    getToken: async (id, oldRefreshToken = null) => {
+        let user = await userModel.findById(id).select('+refresh_token').exec();
+        if (user && !(oldRefreshToken && user.refresh_token.indexOf(oldRefreshToken) === -1)) {
+            // console.log(user)
             let token = await jwt.sign({
                 exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),
-                data: user
+                data: {
+                    _id: user._id,
+                    email: user.email
+                }
               }, jwtSecret);
             let refreshToken = await jwt.sign({
                 exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 30),
-                data: user
+                data: {
+                    _id: user._id,
+                    email: user.email
+                }
               }, jwtSecret);
-            console.log(refreshToken)
-            await user.update({$push: {refresh_token: refreshToken}})
+            await user.updateOne({$push: {refresh_token: refreshToken}})
+            if (oldRefreshToken) {
+                await userModel.updateOne({ _id: id }, {$pull: {refresh_token: { $in: [oldRefreshToken] }}})
+            }
             return { token, refreshToken }
         }
         return false

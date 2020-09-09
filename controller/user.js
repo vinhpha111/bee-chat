@@ -2,6 +2,8 @@ const userModel = require('../model/user')
 const userRepository = require('../repository/user')
 const bcrypt = require('bcrypt')
 const saltRounds = process.env.BCRYPT_SALT_ROUNDS || 10
+var jwt = require('jsonwebtoken')
+const jwtSecret = process.env.JWT_SECRET || 'secret'
 
 module.exports = {
     login: async (req, res) => {
@@ -17,6 +19,22 @@ module.exports = {
         user.hash_password = null
         user.tokenData = tokenData
         return res.json({user})
+    },
+    getToken: async (req, res) => {
+        const refreshToken = req.body.refreshToken
+        if (refreshToken) {
+            try {
+                const userInfo = await jwt.verify(refreshToken, jwtSecret)
+                console.log(userInfo.data._id)
+                const tokenData = await userRepository.getToken(userInfo.data._id, refreshToken)
+                if (tokenData) {
+                    return res.status(200).json(tokenData)
+                }
+            } catch (error) {
+                return res.status(498).send('expired')
+            }
+        }
+        return res.status(403).send('unauthorization')
     },
     getAuthInfo: async (req, res) => {
         let user = await userModel.findById(req.userInfo._id)

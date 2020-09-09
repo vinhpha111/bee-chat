@@ -3,13 +3,15 @@ import axios from 'axios'
 const state = () => ({
     token: localStorage.getItem("token"),
     refresh_token: localStorage.getItem("refresh_token"),
-    user_info: null
+    user_info: null,
+    beingRefreshToken: false
 })
 
 const getters = {
     getToken: state => state.token,
     getRefreshToken: state => state.refresh_token,
-    getUserInfo: state => state.user_info
+    getUserInfo: state => state.user_info,
+    beingRefreshToken: state => state.beingRefreshToken
 }
 
 const mutations = {
@@ -23,6 +25,9 @@ const mutations = {
     },
     setUserInfo: (state, userInfo) => {
         state.user_info = userInfo
+    },
+    setBeingRefreshToken: (state, bool) => {
+        state.beingRefreshToken = bool
     }
 }
 
@@ -38,6 +43,9 @@ const actions = {
     },
     getUser: () => {
         return axios.get('user/get-auth-user-info')
+    },
+    getToken: (store) => {
+        return axios.post('user/get-token', { refreshToken: store.getters.getRefreshToken })
     }
 }
 

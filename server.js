@@ -3,10 +3,10 @@ const app = express()
 const path = require('path');
 require('dotenv').config()
 const port = process.env.PORT || 4000
-if (process.env.ENV && process.env.ENV !== 'production') {
+// if (process.env.ENV && process.env.ENV !== 'production') {
   var cors = require('cors')
   app.use(cors())
-}
+// }
 
 const apiRouter = require('./api-router')
 const configDB = require('./database/config')

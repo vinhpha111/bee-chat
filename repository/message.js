@@ -2,22 +2,50 @@ const roomRepository = require('./room')
 const messageModel = require('../model/message')
 const { TYPE_OF_MESSAGE } =  require('../config/constants')
 module.exports = {
-    getListMessageInRoom: async (slugRoom) => {
+    getListMessageInRoom: async (slugRoom, query = {}) => {
         const room = await roomRepository.getRoomBySlug(slugRoom)
-        if (room) {
-            let messages = await messageModel.find({
-                type: TYPE_OF_MESSAGE.IN_ROOM,
-                in_room: room,
-                $or: [
-                    { parent: null },
-                    { parent : { $exists: false } }
-                ]
-            }).populate('author').exec()
-            let listMesage = messages.map(obj => obj.toJSON())
-            for (let index in messages) {
-                messages[index] = messages[index].toJSON()
-                messages[index].childrens = listMesage
+        const getAuthor = [
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: "author",
+                    foreignField: "_id",
+                    as: "author"
+                }
+            },
+            { $addFields: { "author": { "$arrayElemAt": [ "$author", 0 ] } } },
+            {
+                $unset: ["author.hash_password", "author.refresh_token"]
             }
+        ]
+        if (room) {
+            let messages = await messageModel.aggregate([
+                {
+                    $match: {
+                        parent: { $exists: false },
+                        _id: { $nin: query.exceptIds || [] },
+                        in_room: room._id
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'messages',
+                        let: { parent_id: "$_id" },
+                        pipeline: [
+                            {
+                                $match: { 
+                                    $expr: { $eq: [ "$parent", "$$parent_id" ] }
+                                }
+                            }
+                        ].concat(getAuthor),
+                        as: 'childrens'
+                    }
+                },
+                {
+                    $sort: {_id: -1}
+                },
+                { $limit : 10 }
+            ].concat(getAuthor)).exec()
             return messages
         }
         return []
