@@ -60,6 +60,16 @@ router.beforeEach(async (to, from, next) => {
       if (userResponse) {
         currentUser = userResponse.data
         store.commit('setUserInfo', currentUser)
+
+        // join socket
+        await store.dispatch('instanceSocket', 'http://localhost:4000').then(function(){
+          console.log('has connect socket');
+        })
+        store.dispatch('emitSocketCallback', {on: 'join', token: store.getters.getToken}).then(res => {
+          console.log(res)
+        }).catch(function(err){
+          console.log(err)
+        })
       }
     } catch (error) {
       console.log(error)
