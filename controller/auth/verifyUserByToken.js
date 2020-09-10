@@ -6,6 +6,7 @@ module.exports = async (req, res, next) => {
             let userInfo = await jwt.verify(req.token, jwtSecret);
             req.userInfo = userInfo.data
         } catch (error) {
+            req.expired = true
         }
     }
     return next()

@@ -21,7 +21,7 @@ axios.interceptors.response.use(
   response => response,
   async error => {
       // Reject promise if usual error
-      if (error.response.status !== 403) {
+      if (error.response.status !== 498) {
           return Promise.reject(error);
       }
 
@@ -31,7 +31,7 @@ axios.interceptors.response.use(
           store.commit('setToken', res.data.token)
           store.commit('setRefreshToken', res.data.refreshToken)
           store.commit('setBeingRefreshToken', false)
-        }).catch((err) => {
+        }).catch(() => {
           store.commit('setToken', null)
           store.commit('setRefreshToken', null)
           store.commit('setBeingRefreshToken', false)

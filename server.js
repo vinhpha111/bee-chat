@@ -1,12 +1,14 @@
 const express = require('express')
 const app = express()
+const http = require('http').createServer(app);
 const path = require('path');
+var io = require('socket.io')(http);
 require('dotenv').config()
 const port = process.env.PORT || 4000
-// if (process.env.ENV && process.env.ENV !== 'production') {
+if (process.env.ENV && process.env.ENV !== 'production') {
   var cors = require('cors')
   app.use(cors())
-// }
+}
 
 const apiRouter = require('./api-router')
 const configDB = require('./database/config')
@@ -27,6 +29,8 @@ app.get('/*',function(req,res) {
   res.sendFile(path.join(__dirname+'/front-end/dist/index.html'));
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+require('./socket')(io)
+
+http.listen(port, () => {
+  console.log(`listening on *:${port}`);
+});
