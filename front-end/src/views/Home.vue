@@ -4,7 +4,7 @@
       <img @click="isShowSideBar = !isShowSideBar" class="sidebar-toggle-btn" src="../assets/images/menu-button-sidebar.png"/>
       <LeftSideBar/>
     </div>
-    <div class="right-bar w3-light-gray">
+    <div class="right-bar w3-white">
       <router-view/>
     </div>
   </div>

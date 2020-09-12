@@ -15,12 +15,8 @@ const mutations = {
 }
 
 const actions = {
-    getMessageInRoom: (state, slug) => {
-        return axios.get('message/get-message-by-slug-room', {
-            params: {
-                slugRoom: slug
-            }
-        })
+    getMessageInRoom: (state, req) => {
+        return axios.post('message/get-message-by-slug-room', req)
     }
 }
 

@@ -1,7 +1,7 @@
 <template>
     <div class="w3-border">
         <div class="header w3-teal">
-            <h5>Headerlabel</h5>
+            <h5>{{$store.getters.getUserInfo.fullname}}</h5>
         </div>
         <div class="main">
             <ul class="w3-ul w3-border">
@@ -9,7 +9,7 @@
             </ul>
             <ul class="w3-ul w3-border">
                 <li class="w3-green w3-center">{{ $t('sidebar.romm_label') }}</li>
-                <li v-for="(room, index) in listRoom" :key="index">
+                <li v-for="(room, index) in $store.getters.getListRoom" :key="index">
                     <router-link :to="`/room/${room.slug}`">{{room.name}}</router-link>
                 </li>
             </ul>
@@ -24,7 +24,6 @@
 export default {
     data() {
         return {
-            listRoom: []
         }
     },
     created() {
@@ -33,7 +32,7 @@ export default {
     methods: {
         getListRoom() {
             this.$store.dispatch('getListRoomByUser').then((res) => {
-                this.listRoom = res.data
+                this.$store.commit('setListRoom', res.data)
             })
         }
     },

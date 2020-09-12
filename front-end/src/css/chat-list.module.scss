@@ -1,0 +1,16 @@
+.list-msg-box {
+  height: 100vh; 
+  overflow-y: auto;
+  .msg-item {
+    padding: 8px;
+    .list-msg-child {
+      margin-top: 8px;
+      .msg-item-child {
+        margin: 0px auto;
+      }
+    }
+    .user-link {
+      cursor: pointer;
+    }
+  }
+}

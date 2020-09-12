@@ -1,8 +1,11 @@
+const mongoose = require('mongoose')
 const roomRepository = require('./room')
 const messageModel = require('../model/message')
 const { TYPE_OF_MESSAGE } =  require('../config/constants')
+
 module.exports = {
     getListMessageInRoom: async (slugRoom, query = {}) => {
+        const exceptIds = (query.exceptIds || []).map(id => mongoose.Types.ObjectId(id))
         const room = await roomRepository.getRoomBySlug(slugRoom)
         const getAuthor = [
             {
@@ -23,7 +26,7 @@ module.exports = {
                 {
                     $match: {
                         parent: { $exists: false },
-                        _id: { $nin: query.exceptIds || [] },
+                        _id: { $nin: exceptIds || [] },
                         in_room: room._id
                     }
                 },
