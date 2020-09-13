@@ -34,5 +34,16 @@ module.exports = {
             return { token, refreshToken }
         }
         return false
+    },
+    // return list user match email or name with string
+    findByString: async (str) => {
+        str = str.toLowerCase()
+        let users = await userModel.find({
+            $or: [
+                { fullname: { $regex: new RegExp(str, 'i') } },
+                { email: { $regex: new RegExp(str, 'i') } },
+            ]
+        })
+        return users
     }
 }

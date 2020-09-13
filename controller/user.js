@@ -39,5 +39,10 @@ module.exports = {
     getAuthInfo: async (req, res) => {
         let user = await userModel.findById(req.userInfo._id)
         return res.json(user)
+    },
+    findByString: async (req, res) => {
+        const str = req.query.str
+        const users = await userRepository.findByString(str)
+        return res.status(200).json(users)
     }
 }

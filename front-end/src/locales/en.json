@@ -3,5 +3,10 @@
   "sidebar": {
     "romm_label": "Room",
     "saved_link": "Saved"
+  },
+  "add_room_page": {
+    "title": "Create new room",
+    "name": "Name",
+    "member": "Member"
   }
 }

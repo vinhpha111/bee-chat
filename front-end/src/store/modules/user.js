@@ -46,6 +46,13 @@ const actions = {
     },
     getToken: (store) => {
         return axios.post('user/get-token', { refreshToken: store.getters.getRefreshToken })
+    },
+    findUserByString: (store, str) => {
+        return axios.get('user/find-by-string', {
+            params: {
+                str: str
+            }
+        })
     }
 }
 

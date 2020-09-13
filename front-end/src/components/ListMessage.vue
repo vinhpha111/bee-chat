@@ -45,6 +45,9 @@ export default {
                         data.reverse()
                         this.loadingMessageUp = false
                         return data
+                    }).catch(() => {
+                        this.loadingMessageUp = false
+                        return []
                     })
                 }
             }

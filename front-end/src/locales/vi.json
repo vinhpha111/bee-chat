@@ -3,5 +3,8 @@
   "sidebar": {
     "romm_label": "Phòng chat",
     "saved_link": "Đã lưu"
+  },
+  "add_room_page": {
+    "title": "Tạo phòng mới"
   }
 }
