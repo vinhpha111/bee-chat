@@ -20,6 +20,9 @@ const mutations = {
 const actions = {
     getListRoomByUser: () => {
         return axios.get('room/get-list-room-by-user')
+    },
+    getRoleInRoom: (store, roomSlug) => {
+        return axios.get(`room/get-role?roomSlug=${roomSlug}`)
     }
 }
 

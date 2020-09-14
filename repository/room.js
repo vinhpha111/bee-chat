@@ -13,5 +13,12 @@ module.exports = {
     getRoomBySlug: async (slug) => {
         const room = await roomModel.findOne({slug})
         return room
+    },
+    getRoleInRoom: async (userId, roomId) => {
+        const userWithRoom = await roomUserModel.findOne({user: userId, room: roomId})
+        if (userWithRoom) {
+            return userWithRoom.role
+        }
+        return null
     }
 }

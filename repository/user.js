@@ -43,7 +43,7 @@ module.exports = {
                 { fullname: { $regex: new RegExp(str, 'i') } },
                 { email: { $regex: new RegExp(str, 'i') } },
             ]
-        })
+        }).limit(20)
         return users
     }
 }

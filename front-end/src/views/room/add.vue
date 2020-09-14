@@ -10,9 +10,14 @@
             <div>
                 <label>{{$t('add_room_page.member')}}</label>
                 <div @click="showFindListUser = true" class="w3-input member-input" type="text">
-                    <b>bole 1</b>
+                    <span class="w3-tag w3-blue w3-margin-right w3-hover-red item"
+                        v-for="(user, index) in listUserSelect" 
+                        @click="removeSelectedUser(user, index);" :key="index">
+                        {{user.fullname}} X
+                    </span>
+                    <i v-if="listUserSelect.length === 0" class="w3-opacity">Click there to select member</i>
                 </div>
-                <FindListUser @close="showFindListUser = false" v-if="showFindListUser" />
+                <FindListUser :exceptIds="userListExcept" @select="selectUserInList" @close="showFindListUser = false" v-if="showFindListUser" />
             </div>
         </form>
     </div>
@@ -25,12 +30,20 @@ export default {
     },
     data() {
         return {
-            showFindListUser: false
+            showFindListUser: false,
+            userListExcept: [],
+            listUserSelect: []
         }
     },
     methods: {
-        inputMember() {
-            console.log('zxczxczxc')
+        selectUserInList(user) {
+            this.userListExcept.push(user._id)
+            this.listUserSelect.push(user)
+        },
+        removeSelectedUser(user, index) {
+            delete this.listUserSelect[index]
+            this.userListExcept = this.userListExcept.filter(id => id !== user._id)
+            this.listUserSelect = this.listUserSelect.filter(item => item._id !== user._id)
         }
     },
 }

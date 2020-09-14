@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from '../store'
+import auth from './auth'
 
 Vue.use(VueRouter)
 
@@ -43,7 +43,10 @@ const routes = [
         path: '/room/:slug',
         name: 'Room',
         component: () => import('../views/room/index.vue'),
-        meta: { auth: [1, 2] }
+        meta: { 
+          auth: [1, 2],
+          authInRoom: [1, 2]
+        }
       }
     ]
   },
@@ -61,42 +64,6 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach(async (to, from, next) => {
-  let auth = to.meta.auth
-  let currentUser = store.getters.getUserInfo
-  if (!currentUser) {
-    try {
-      const userResponse = await store.dispatch('getUser')
-      if (userResponse) {
-        currentUser = userResponse.data
-        store.commit('setUserInfo', currentUser)
-
-        // join socket
-        await store.dispatch('instanceSocket', 'http://localhost:4000').then(function(){
-          console.log('has connect socket');
-        })
-        store.dispatch('emitSocketCallback', {on: 'join', token: store.getters.getToken}).then(res => {
-          console.log(res)
-        }).catch(function(err){
-          console.log(err)
-        })
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  if (auth) {
-    if (currentUser && auth.indexOf(currentUser.role) !== -1) {
-      next()
-    } else {
-      next({ path: '/login' })
-    }
-  } else if (currentUser && to.name === 'Login') {
-    next({ path: '/' })
-  } else {
-    next()
-  }
-})
+router.beforeEach(auth)
 
 export default router

@@ -1,22 +1,31 @@
 <template>
-    <div class="list-user-box" @mouseover="hoverIn = true" @mouseout="hoverIn = false">
+    <div @click="clickIn = true" class="list-user-box">
         <input v-model="str" @input="loadListUser" v-if="inputPosition !== 'bottom'" class="user-typing" type="text"/>
         <ul class="w3-ul w3-border list-user">
-            <li v-for="(user, index) in listUser" :key="index" class="w3-hover-blue">{{user.fullname}}</li>
+            <li v-for="(user, index) in filterUsers" @click="selectUser(user)" :key="index" class="w3-hover-blue">
+                    {{user.fullname}}
+            </li>
         </ul>
-        <input v-if="inputPosition === 'bottom'" class="user-typing" type="text"/>
+        <input v-model="str" @input="loadListUser" v-if="inputPosition === 'bottom'" class="user-typing" type="text"/>
     </div>
 </template>
 <script>
 import _ from 'lodash'
 let self = null
 export default {
-    props: ["inputPosition"],
+    props: {
+        inputPosition: {
+            type: String,
+            default: 'top'
+        },
+        exceptIds: Array,
+        closeWhenSelect: Boolean
+    },
     data() {
         return {
             listUser: [],
             str: '',
-            hoverIn: true
+            clickIn: null
         }
     },
     created() {
@@ -32,9 +41,24 @@ export default {
             self.listUser = (await self.$store.dispatch('findUserByString', self.str)).data || []
         }, 500),
         handleClickOut: () => {
-            if (self.hoverIn === false) {
-                self.$emit('close')
+            setTimeout(() => {
+                if (self.clickIn === false) {
+                    self.$emit('close')
+                } else {
+                    self.clickIn = false
+                }
+            }, 10)
+        },
+        selectUser(user) {
+            this.$emit('select', user)
+            if (this.closeWhenSelect) {
+                this.$emit('close')
             }
+        }
+    },
+    computed: {
+        filterUsers: () => {
+            return self.listUser.filter((user) => self.exceptIds.indexOf(user._id) === -1)
         }
     },
     destroyed() {

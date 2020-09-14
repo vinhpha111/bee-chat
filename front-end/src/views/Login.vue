@@ -38,7 +38,7 @@ export default {
             this.$store.dispatch('loginUser', dataSubmit)
                 .then(() => {
                     this.$store.commit('setLoading', false)
-                    this.$router.push({ name: 'Home' })
+                    this.$router.go({ name: 'Home' })
                 })
                 .catch(err => {
                     const errorData = err.response
