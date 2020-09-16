@@ -4,9 +4,9 @@
             <h4>{{$t('add_room_page.title')}}</h4>
         </div>
         <br/>
-        <form class="w3-container">
+        <div class="w3-container">
             <label>{{$t('add_room_page.name')}}</label>
-            <input class="w3-input" type="text"><br/>
+            <input class="w3-input" type="text" v-model="roomName" :placeholder="$t('add_room_page.name_placeholder')"><br/>
             <div>
                 <label>{{$t('add_room_page.member')}}</label>
                 <div @click="showFindListUser = true" class="w3-input member-input" type="text">
@@ -15,11 +15,14 @@
                         @click="removeSelectedUser(user, index);" :key="index">
                         {{user.fullname}} X
                     </span>
-                    <i v-if="listUserSelect.length === 0" class="w3-opacity">Click there to select member</i>
+                    <i v-if="listUserSelect.length === 0" class="w3-opacity">{{ $t('add_room_page.click_to_select_user') }}</i>
                 </div>
                 <FindListUser :exceptIds="userListExcept" @select="selectUserInList" @close="showFindListUser = false" v-if="showFindListUser" />
             </div>
-        </form>
+            <div class="w3-center">
+                <button @click="addRoom" :class="['w3-button w3-green w3-margin-top']">{{ $t('add_room_page.create_btn') }}</button>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -32,7 +35,9 @@ export default {
         return {
             showFindListUser: false,
             userListExcept: [],
-            listUserSelect: []
+            listUserSelect: [],
+            roomName: '',
+            saveSuccess: false
         }
     },
     methods: {
@@ -44,6 +49,26 @@ export default {
             delete this.listUserSelect[index]
             this.userListExcept = this.userListExcept.filter(id => id !== user._id)
             this.listUserSelect = this.listUserSelect.filter(item => item._id !== user._id)
+        },
+        addRoom() {
+            if (this.saveSuccess) {
+                return false
+            }
+            this.$store.commit('setLoadingView', true)
+            const data = {
+                name: this.roomName,
+                userList: this.listUserSelect.map(user => user._id)
+            }
+            this.$store.dispatch('addNewRoom', data).then(res => {
+                this.saveSuccess = true
+                this.$store.commit('addRoom', res.data)
+                this.$router.push({ name: 'Room', params: {slug: res.data.slug} })
+                this.$store.commit('setLoadingView', false)
+            }).catch(error => {
+                this.saveSuccess = false
+                console.log(error)
+                this.$store.commit('setLoadingView', false)
+            })
         }
     },
 }

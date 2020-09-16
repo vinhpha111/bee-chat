@@ -2,3 +2,4 @@ node_modules
 .env
 front-end/dist
 front-end/node_modules
+data

@@ -1,5 +1,5 @@
 <template>
-<div v-if="$store.getters.getLoading" class="loading-screen">
+<div class="loading-screen" :style="{position}">
   <div class="lds-ellipsis">
     <div></div>
     <div></div>
@@ -8,6 +8,11 @@
   </div>
 </div>
 </template>
+<script>
+export default {
+    props: ['position']
+}
+</script>
 <style lang="scss" scoped>
 .loading-screen {
     position: fixed;

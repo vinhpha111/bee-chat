@@ -5,7 +5,7 @@
               {{ $t('sidebar.romm_label') }}
               <router-link  class="add-room-btn" :to="`/room/add`">+</router-link>
           </li>
-          <li v-for="(room, index) in $store.getters.getListRoom" :key="index">
+          <li v-for="(room, index) in $store.getters.getListRoom" :class="[{'w3-light-blue': checkActive(room.slug)}]" :key="index">
               <router-link :to="`/room/${room.slug}`">{{room.name}}</router-link>
           </li>
       </ul>
@@ -22,7 +22,17 @@ export default {
         this.$store.dispatch('getListRoomByUser').then((res) => {
             this.$store.commit('setListRoom', res.data)
         })
-    }
+    },
+  },
+  computed: {
+      checkActive:function(){
+        return (slug) => {
+            if (this.$route.name === 'Room' && this.$route.params.slug === slug) {
+                return true
+            }
+            return false
+        }
+      }
   },
 }
 </script>

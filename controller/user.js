@@ -41,8 +41,7 @@ module.exports = {
         return res.json(user)
     },
     findByString: async (req, res) => {
-        const str = req.query.str
-        const users = await userRepository.findByString(str)
+        const users = await userRepository.findByString(req)
         return res.status(200).json(users)
     }
 }

@@ -36,13 +36,19 @@ module.exports = {
         return false
     },
     // return list user match email or name with string
-    findByString: async (str) => {
-        str = str.toLowerCase()
+    findByString: async (req) => {
+        str = req.query.str.toLowerCase()
         let users = await userModel.find({
             $or: [
                 { fullname: { $regex: new RegExp(str, 'i') } },
                 { email: { $regex: new RegExp(str, 'i') } },
-            ]
+            ],
+            _id: {
+                $nin: req.query.exceptIds || []
+            },
+            _id: {
+                $ne: req.userInfo._id || null
+            }
         }).limit(20)
         return users
     }

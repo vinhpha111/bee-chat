@@ -6,10 +6,11 @@
         <LeftSideBar/>
       </div>
       <div class="right-bar w3-white">
-        <router-view/>
+        <router-view  :key="$route.fullPath"/>
+        <loading-screen position="absolute" v-if="$store.getters.getLoadingView" />
       </div>
     </div>
-    <loading-screen/>
+    <loading-screen v-if="$store.getters.getLoading"/>
   </div>
 </template>
 

@@ -22,7 +22,7 @@ export default {
             loadingMessageUp: false
         }
     },
-    async created(){
+    async created() {
         this.slugRoom = this.$route.params.slug
         this.listMessage = await this.getMessages()
         this.scrollTobottom()

@@ -3,6 +3,7 @@ const userModel = require('../../../model/user')
 const roomUserModel = require('../../../model/roomUser')
 
 module.exports = async () => {
+    await roomUserModel.deleteMany()
     const user = await userModel.findOne({email: 'admin@gmail.com'})
     const guest = await userModel.findOne({email: 'guest@gmail.com'})
     const room = await roomModel.findOne({name: 'First room'})

@@ -1,9 +1,9 @@
 import store from '../store'
 export default async (to, from, next) => {
+  store.commit('setLoadingView', true)
   let auth = to.meta.auth
   let currentUser = store.getters.getUserInfo
   if (!currentUser) {
-    store.commit('setLoading', true)
     try {
       const userResponse = await store.dispatch('getUser')
       if (userResponse) {
@@ -23,7 +23,6 @@ export default async (to, from, next) => {
     } catch (error) {
       console.log(error)
     }
-    store.commit('setLoading', false)
   }
 
   const status = {
@@ -56,7 +55,7 @@ export default async (to, from, next) => {
       currenStatus = status.home
     }
   }
-
+  store.commit('setLoadingView', false)
   switch (currenStatus) {
     case status.continue:
       next()

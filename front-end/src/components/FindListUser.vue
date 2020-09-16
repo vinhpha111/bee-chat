@@ -1,12 +1,12 @@
 <template>
     <div @click="clickIn = true" class="list-user-box">
-        <input v-model="str" @input="loadListUser" v-if="inputPosition !== 'bottom'" class="user-typing" type="text"/>
+        <input :placeholder="$t('find_list_user.typing_name_or_email')" v-model="str" @input="loadListUser" v-if="inputPosition !== 'bottom'" class="user-typing" type="text"/>
         <ul class="w3-ul w3-border list-user">
             <li v-for="(user, index) in filterUsers" @click="selectUser(user)" :key="index" class="w3-hover-blue">
-                    {{user.fullname}}
+                {{user.fullname}}
             </li>
         </ul>
-        <input v-model="str" @input="loadListUser" v-if="inputPosition === 'bottom'" class="user-typing" type="text"/>
+        <input :placeholder="$t('find_list_user.typing_name_or_email')" v-model="str" @input="loadListUser" v-if="inputPosition === 'bottom'" class="user-typing" type="text"/>
     </div>
 </template>
 <script>
@@ -38,7 +38,11 @@ export default {
     },
     methods: {
         loadListUser: _.debounce(async ()=> {
-            self.listUser = (await self.$store.dispatch('findUserByString', self.str)).data || []
+            const query = {
+                str: self.str,
+                exceptIds: self.exceptIds
+            }
+            self.listUser = (await self.$store.dispatch('findUserByString', query)).data || []
         }, 500),
         handleClickOut: () => {
             setTimeout(() => {

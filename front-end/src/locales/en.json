@@ -7,6 +7,12 @@
   "add_room_page": {
     "title": "Create new room",
     "name": "Name",
-    "member": "Member"
+    "name_placeholder": "Enter name",
+    "member": "Member",
+    "click_to_select_user": "Click there to select member",
+    "create_btn": "Create new room"
+  },
+  "find_list_user": {
+    "typing_name_or_email": "Please typing name or email"
   }
 }

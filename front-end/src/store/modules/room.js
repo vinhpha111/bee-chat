@@ -23,6 +23,9 @@ const actions = {
     },
     getRoleInRoom: (store, roomSlug) => {
         return axios.get(`room/get-role?roomSlug=${roomSlug}`)
+    },
+    addNewRoom: (store, data) => {
+        return axios.post('room/add', data)
     }
 }
 

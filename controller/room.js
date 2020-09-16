@@ -17,5 +17,15 @@ module.exports = {
             return res.status(404).send('cannot found')
         }
         return res.json(role)
+    },
+    add: async (req, res) => {
+        const userCreate = req.userInfo._id
+        const name = req.body.name
+        const listUser = req.body.userList
+        const room = await roomRepository.create({ name, listUser, userCreate })
+        if (room) {
+            return res.json(room)
+        }
+        return res.status(500).send('Error')
     }
 }
