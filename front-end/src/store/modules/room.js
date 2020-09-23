@@ -26,6 +26,9 @@ const actions = {
     },
     addNewRoom: (store, data) => {
         return axios.post('room/add', data)
+    },
+    sendMessageInRoom: (store, data) => {
+        return axios.post('room/addMessage', data)
     }
 }
 

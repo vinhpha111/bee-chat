@@ -1,5 +1,5 @@
 .list-msg-box {
-  height: 100vh; 
+  height: calc(100vh - 120px); 
   overflow-y: auto;
   .msg-item {
     padding: 8px;

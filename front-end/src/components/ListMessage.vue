@@ -27,6 +27,7 @@ export default {
         this.listMessage = await this.getMessages()
         this.scrollTobottom()
         this.addScrollListener()
+        this.listenMessage()
     },
     methods: {
         async getMessages() {
@@ -52,6 +53,16 @@ export default {
                 }
             }
             return []
+        },
+        listenMessage() {
+            const room = this.$store.getters.getListRoom.find(room => room.slug === this.slugRoom )
+            this.$store.dispatch('onSocket', {
+                on: room._id,
+                callback: (data) => {
+                    this.listMessage.push(data.message)
+                    this.keepPositionInScroll()
+                }
+            })
         },
         scrollTobottom() {
             setTimeout(() => {

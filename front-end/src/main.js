@@ -35,9 +35,9 @@ axios.interceptors.response.use(
           store.commit('setRefreshToken', res.data.refreshToken)
           store.commit('setBeingRefreshToken', false)
         }).catch(() => {
-          store.commit('setToken', null)
-          store.commit('setRefreshToken', null)
-          store.commit('setBeingRefreshToken', false)
+          store.commit('setToken', '')
+          store.commit('setRefreshToken', '')
+          store.commit('setBeingRefreshToken', '')
         })
       }
       

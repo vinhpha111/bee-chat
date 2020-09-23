@@ -10,5 +10,8 @@ module.exports = {
     TYPE_OF_MESSAGE: {
         IN_ROOM: 1,
         IN_USER: 2
+    },
+    TYPE_EMIT_TO_ROOM: {
+        NEW_MESSAGE: 1
     }
 }

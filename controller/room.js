@@ -1,4 +1,5 @@
 const roomRepository = require('../repository/room')
+const messageRepository = require('../repository/message')
 module.exports = {
     getListByUser: async (req, res) => {
         return res.json(await roomRepository.getRoomByUser(req.userInfo._id))
@@ -25,6 +26,13 @@ module.exports = {
         const room = await roomRepository.create({ name, listUser, userCreate })
         if (room) {
             return res.json(room)
+        }
+        return res.status(500).send('Error')
+    },
+    addMessage: async (req, res) => {
+        const message = await messageRepository.addMessageInRoom(req)
+        if (message) {
+            return res.json(message)
         }
         return res.status(500).send('Error')
     }

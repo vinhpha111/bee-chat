@@ -1,6 +1,7 @@
 var jwt = require('jsonwebtoken')
 const jwtSecret = process.env.JWT_SECRET || 'secret'
 module.exports = (io) => {
+  global.io = io
   io.on('connection', (socket) => {
     console.log('a user connected');
     socket.on('disconnect', () => {
