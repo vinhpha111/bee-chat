@@ -18,6 +18,9 @@ var mongoDB = configDB.url.replace('@username', configDB.username).replace('@pas
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
+db.once('open', function() {
+  console.info('connected db!')
+});
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use(express.json()) // for parsing application/json
