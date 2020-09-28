@@ -31,5 +31,6 @@ export default {
 </script>
 
 <style lang="scss">
-  @import './css/main.module.scss'
+  @import './css/main.module.scss';
+  @import './css/text-editor.module.scss';
 </style>

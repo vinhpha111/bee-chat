@@ -1,5 +1,5 @@
 <template>
-  <div :class="[message.author._id === $store.getters.getUserInfo._id ? 'w3-pale-blue': 'w3-light-gray', 'trix-content']" 
+  <div :class="[message.author._id === $store.getters.getUserInfo._id ? 'w3-pale-blue': 'w3-light-gray', 'text-input-editor-view']" 
       class="w3-panel w3-border-light-blue w3-border w3-margin-left w3-margin-right msg-item w3-display-container">
       <label class="w3-text-blue user-link"><b>{{message.author.fullname}}</b></label>
       <label :title="getDateTimeByFormat(message.created_at, '%y/%m/%d %h:%i')" 
@@ -14,7 +14,7 @@
                   class="w3-margin-left w3-text-blue-grey w3-tiny">
                   <i>{{getDateTimeByFormat(children.created_at, '%h:%i')}}</i>
               </label>
-              <div v-html="children.content"></div>
+              <div :class="['text-input-editor-view']" v-html="children.content"></div>
           </div>
       </div>
   </div>

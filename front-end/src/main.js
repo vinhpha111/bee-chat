@@ -4,10 +4,7 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import i18n from './i18n'
-import _ from 'lodash'
 import './css/w3.css'
-
-Object.defineProperty(Vue.prototype, '$_', { value: _ });
 
 Vue.config.productionTip = false
 
