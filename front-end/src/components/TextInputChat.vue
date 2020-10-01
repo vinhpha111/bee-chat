@@ -6,6 +6,7 @@
 			<a :class="['icon', { 'selected': toolBarActive.link.active}]" href="javascript:void(0)"><i class="fa fa-link"></i></a>
 			<a :class="['icon', { 'selected': toolBarActive.insertunorderedlist.active}]" href="javascript:void(0)" @click="format('insertunorderedlist'); toolBarActive.insertunorderedlist.active = !toolBarActive.insertunorderedlist.active"><i class="fa fa-list-ul"></i></a>
 			<a :class="['icon', { 'selected': toolBarActive.formatBlock.active}]" href="javascript:void(0)" @click="format('formatBlock', 'blockquote'); toolBarActive.formatBlock.active = !toolBarActive.formatBlock.active"><i class="fa fa-quote-left"></i></a>
+      <a :class="['icon', 'icon-smile']" href="javascript:void(0)"><i class="fa fa-smile-o"></i></a>
 		</div>
 		<div @click="checkActiveToolbar" @keyup="checkActiveToolbar" @input="emitHtml" id="htmlContent" contenteditable="true" class="text-input-editor">
 		</div>
