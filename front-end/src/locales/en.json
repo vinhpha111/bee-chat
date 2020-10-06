@@ -1,5 +1,4 @@
 {
-  "message": "hello i18n !!",
   "sidebar": {
     "romm_label": "Room",
     "saved_link": "Saved"
@@ -14,5 +13,9 @@
   },
   "find_list_user": {
     "typing_name_or_email": "Please typing name or email"
+  },
+  "message_item": {
+    "reply": "reply",
+    "add_emoji": "Add emoji"
   }
 }
