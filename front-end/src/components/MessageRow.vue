@@ -8,7 +8,7 @@
         </label>
         <div v-html="message.content"></div>
         <div class="msg-item-footer">
-            <span class="reply" :title="getListUserInChild(message.childrens)"><i class="fa fa-share-square-o"></i> reply <i v-if="message.childrens.length > 0">({{message.childrens.length}})</i></span>
+            <span class="reply" @click="$store.commit('subThread/setType', 'comment')" :title="getListUserInChild(message.childrens)"><i class="fa fa-share-square-o"></i> reply <i v-if="message.childrens.length > 0">({{message.childrens.length}})</i></span>
             <span class="add-emoji" :title="$t('message_item.add_emoji')" @click="$refs['emoji-box'].show()"><i class="fa fa-smile-o"></i></span>
         </div>
         <EmojiBox ref="emoji-box"/>

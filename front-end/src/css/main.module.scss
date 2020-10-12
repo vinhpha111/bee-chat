@@ -42,6 +42,18 @@ body {
         height: 100vh;
         background-color: darkgrey;
         position: relative;
+        display: flex;
+        .main-thread {
+            width: 100%;
+        }
+        &.has-sub-thread {
+            .main-thread {
+                width: 60%;
+            }
+            .sub-thread {
+                width: 40%;
+            }
+        }
     }
 }
 

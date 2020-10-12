@@ -5,6 +5,7 @@ import room from './modules/room'
 import message from './modules/message'
 import loading from './modules/loading'
 import sockket from './modules/socket'
+import subThread from './modules/subThread'
 
 Vue.use(Vuex)
 
@@ -13,7 +14,8 @@ let modules = {
     loading,
     room,
     message,
-    sockket
+    sockket,
+    subThread
 }
 const store = new Vuex.Store({
   modules
