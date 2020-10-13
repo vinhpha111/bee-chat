@@ -1,5 +1,5 @@
 <template>
-    <div :class="[message.author._id === $store.getters.getUserInfo._id ? 'w3-pale-blue': 'w3-light-gray', 'text-input-editor-view', 'message-row']" 
+    <div v-if="message" :class="[message.author._id === $store.getters.getUserInfo._id ? 'w3-pale-blue': 'w3-light-gray', 'text-input-editor-view', 'message-row']" 
         class="w3-panel w3-border-light-blue w3-border msg-item w3-display-container">
         <label class="w3-text-blue user-link"><b>{{message.author.fullname}}</b></label>
         <label :title="getDateTimeByFormat(message.created_at, '%y/%m/%d %h:%i')" 
@@ -8,7 +8,7 @@
         </label>
         <div v-html="message.content"></div>
         <div class="msg-item-footer">
-            <span class="reply" @click="$store.commit('subThread/setType', 'comment')" :title="getListUserInChild(message.childrens)"><i class="fa fa-share-square-o"></i> reply <i v-if="message.childrens.length > 0">({{message.childrens.length}})</i></span>
+            <span v-if="!isThread" class="reply" @click="replyMessage(message)" :title="getListUserInChild(message.childrens)"><i class="fa fa-share-square-o"></i> reply <i v-if="message.childrens.length > 0">({{message.childrens.length}})</i></span>
             <span class="add-emoji" :title="$t('message_item.add_emoji')" @click="$refs['emoji-box'].show()"><i class="fa fa-smile-o"></i></span>
         </div>
         <EmojiBox ref="emoji-box"/>
@@ -64,6 +64,12 @@ export default {
                 }
                 return this.$t('message_item.reply')
             }
+        }
+    },
+    methods: {
+        replyMessage(message) {
+            this.$store.commit('subThread/setType', 'reply')
+            this.$store.commit('setMessageReply', message)
         }
     },
 }

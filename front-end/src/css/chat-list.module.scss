@@ -1,37 +1,38 @@
 .list-msg-box {
     height: calc(100vh - 120px);
     overflow-y: auto;
-    .msg-item {
-        padding: 8px;
-        padding-bottom: 3px;
-        .list-msg-child {
-            margin-top: 8px;
-            .msg-item-child {
-                margin: 0px auto;
-            }
+}
+
+.msg-item {
+    padding: 8px;
+    padding-bottom: 3px;
+    .list-msg-child {
+        margin-top: 8px;
+        .msg-item-child {
+            margin: 0px auto;
         }
-        .user-link {
+    }
+    .user-link {
+        cursor: pointer;
+    }
+
+    &-footer {
+        .reply {
+            font-size: 12px;
             cursor: pointer;
+            color: green;
+            &:hover {
+                color: rgb(0, 208, 0);
+            }
         }
 
-        &-footer {
-            .reply {
-                font-size: 12px;
-                cursor: pointer;
-                color: green;
-                &:hover {
-                    color: rgb(0, 208, 0);
-                }
-            }
-
-            .add-emoji {
-                font-size: 14px;
-                margin-left: 10px;
-                opacity: 0.7;
-                cursor: pointer;
-                &:hover {
-                    opacity: 1;
-                }
+        .add-emoji {
+            font-size: 14px;
+            margin-left: 10px;
+            opacity: 0.7;
+            cursor: pointer;
+            &:hover {
+                opacity: 1;
             }
         }
     }
