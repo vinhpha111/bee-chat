@@ -1,0 +1,39 @@
+version: "2"
+services:
+  node:
+    build: ./node
+    volumes:
+      - ../../:/src/
+    working_dir: /src
+    ports:
+      - 4000:4000
+    networks:
+      - beechat-network
+    command: ""
+  mongodb1:
+    image: mongo
+    restart: always
+    volumes:
+       - ./mongo/db1:/data/db
+    networks:
+      - beechat-network
+    command: mongod --replSet rs
+  mongodb2:
+    image: mongo
+    restart: always
+    volumes:
+       - ./mongo/db2:/data/db
+    networks:
+      - beechat-network
+    command: mongod --replSet rs
+  mongodb3:
+    image: mongo
+    restart: always
+    volumes:
+       - ./mongo/db3:/data/db
+    networks:
+      - beechat-network
+    command: mongod --replSet rs
+networks:
+  beechat-network:
+    driver: bridge
