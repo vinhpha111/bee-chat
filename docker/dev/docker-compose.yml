@@ -1,28 +1,36 @@
 version: "2"
 services:
   node:
-    build: ./node
+    image: node
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NPM_CONFIG_PREFIX=/home/node/.npm-global
     volumes:
-      - ../../:/src/
-    working_dir: /src
+      - ../../:/home/node/app
+    container_name: node-beechat
+    expose:
+      - "4000"
     ports:
       - 4000:4000
     networks:
       - beechat-network
-    command: ""
+    command: bash -c "npm install bcrypt && node server.js"
   mongodb1:
     image: mongo
     restart: always
     volumes:
        - ./mongo/db1:/data/db
+    container_name: mongodb1
     networks:
       - beechat-network
-    command: mongod --replSet rs
+    # command: mongod --replSet rs
   mongodb2:
     image: mongo
     restart: always
     volumes:
        - ./mongo/db2:/data/db
+    container_name: mongodb2
     networks:
       - beechat-network
     command: mongod --replSet rs
@@ -31,6 +39,7 @@ services:
     restart: always
     volumes:
        - ./mongo/db3:/data/db
+    container_name: mongodb3
     networks:
       - beechat-network
     command: mongod --replSet rs

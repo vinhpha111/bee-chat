@@ -1,3 +1,5 @@
-FROM node:10
+FROM node
 EXPOSE 4000
+WORKDIR 
+RUN npm install --no-optional
 RUN npm install nodemon -g
