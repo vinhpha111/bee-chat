@@ -15,12 +15,12 @@ services:
       - 4000:4000
     networks:
       - beechat-network
-    command: bash -c "npm install && npm && node server.js"
+    command: bash -c "npm install && node server.js"
   mongodb1:
     image: mongo
     volumes:
       - ./mongo/db1:/data/db
-      - ./mongo/script:/data/script
+      - ./mongo/script:/data
     container_name: mongodb1
     expose:
       - "27017"
