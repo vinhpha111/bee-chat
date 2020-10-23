@@ -15,34 +15,36 @@ services:
       - 4000:4000
     networks:
       - beechat-network
-    command: bash -c "npm install bcrypt && node server.js"
+    command: bash -c "npm install && npm && node server.js"
   mongodb1:
     image: mongo
-    restart: always
     volumes:
-       - ./mongo/db1:/data/db
+      - ./mongo/db1:/data/db
+      - ./mongo/script:/data/script
     container_name: mongodb1
+    expose:
+      - "27017"
+    ports:
+      - 27017:27017
     networks:
       - beechat-network
-    # command: mongod --replSet rs
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs" ]
   mongodb2:
     image: mongo
-    restart: always
     volumes:
        - ./mongo/db2:/data/db
     container_name: mongodb2
     networks:
       - beechat-network
-    command: mongod --replSet rs
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs" ]
   mongodb3:
     image: mongo
-    restart: always
     volumes:
        - ./mongo/db3:/data/db
     container_name: mongodb3
     networks:
       - beechat-network
-    command: mongod --replSet rs
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs" ]
 networks:
   beechat-network:
     driver: bridge
