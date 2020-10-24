@@ -15,7 +15,7 @@ services:
       - 4000:4000
     networks:
       - beechat-network
-    command: bash -c "npm install && node server.js"
+    command: bash -c "npm install && npm install nodemon && npx nodemon server.js"
   mongodb1:
     image: mongo
     volumes:

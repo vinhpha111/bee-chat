@@ -1,7 +1,6 @@
 <template>
-    <div v-if="message" :class="[message.author._id === $store.getters.getUserInfo._id ? 'w3-pale-blue': 'w3-light-gray', 'text-input-editor-view', 'message-row']" 
-        class="w3-panel w3-border-light-blue w3-border msg-item w3-display-container">
-        <label class="w3-text-blue user-link"><b>{{message.author.fullname}}</b></label>
+    <div v-if="message" :class="[messageOwner ? 'w3-border-blue w3-leftbar': 'w3-border','text-input-editor-view message-row w3-panel w3-border msg-item w3-display-container']">
+        <label :class="[messageOwner ? 'w3-text-blue': 'w3-text-light-blue', 'w3-text-blue user-link']"><b>{{message.author.fullname}}</b></label>
         <label :title="getDateTimeByFormat(message.created_at, '%y/%m/%d %h:%i')" 
             class="w3-margin-left w3-text-blue-grey w3-tiny">
             <i>{{getDateTimeByFormat(message.created_at, '%h:%i')}}</i>
@@ -9,13 +8,15 @@
         <div v-html="message.content"></div>
         <div class="msg-item-footer">
             <span v-if="!isThread" class="reply" @click="replyMessage(message)" :title="getListUserInChild(message.childrens)"><i class="fa fa-share-square-o"></i> reply <i v-if="message.childrens.length > 0">({{message.childrens.length}})</i></span>
-            <span class="add-emoji" :title="$t('message_item.add_emoji')" @click="$refs['emoji-box'].show()"><i class="fa fa-smile-o"></i></span>
+            <span v-for="(emoji, index) in listEmoji" :key="index" :title="getListUserName(emoji.members)" class="emoji">{{emoji.emoji.char}} {{emoji.count}}</span>
+            <span class="add-emoji" :title="$t('message_item.add_emoji')" @click="showEmoji"><i class="fa fa-smile-o"></i></span>
         </div>
-        <EmojiBox ref="emoji-box"/>
+        <EmojiBox @selectEmoji="addEmoji" ref="emoji-box"/>
     </div>
 </template>
 <script>
 import EmojiBox from './EmojiBox/EmojiBox'
+import { orderBy } from 'lodash'
 export default {
     name: "MessageRow",
     props: ['message', 'is-thread'],
@@ -64,12 +65,54 @@ export default {
                 }
                 return this.$t('message_item.reply')
             }
+        },
+        messageOwner() {
+            return this.message.author._id === this.$store.getters.getUserInfo._id
+        },
+        listEmoji() {
+            let listEmoji = []
+            let emojis = orderBy(this.message.emojis, ['emoji'], ['asc'])
+            for (let i = 0; i < emojis.length; i++) {
+                if (i === 0 || emojis[i].emoji !== emojis[i - 1].emoji) {
+                    listEmoji.push({
+                        emoji: JSON.parse(emojis[i].emoji),
+                        type: emojis[i].type,
+                        count: 1,
+                        members: [emojis[i].author]
+                    })
+                } else {
+                    const pos = listEmoji.length - 1
+                    listEmoji[pos].count = listEmoji[pos].count + 1
+                    if (listEmoji[pos].members.map(m => m._id).indexOf(emojis[i].author._id) === -1) {
+                        listEmoji[pos].members.push(emojis[i].author)
+                    }
+                }
+            }
+            return listEmoji
         }
     },
     methods: {
         replyMessage(message) {
             this.$store.commit('subThread/setType', 'reply')
             this.$store.commit('setMessageReply', message)
+        },
+        showEmoji(event) {
+            this.$refs['emoji-box'].show(event.clientX, event.clientY)
+        },
+        addEmoji(emoji) {
+            console.log(emoji)
+            const data = {
+                emoji,
+                message_id: this.message._id
+            }
+            this.$store.dispatch('addEmojiChar', data).then((data) => {
+                console.log(data)
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        getListUserName(members) {
+            return members.map(m => m.fullname).join(', ')
         }
     },
 }

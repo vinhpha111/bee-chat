@@ -23,6 +23,9 @@ const mutations = {
 const actions = {
     getMessageInRoom: (state, req) => {
         return axios.post('message/get-message-by-slug-room', req)
+    },
+    addEmojiChar: (state, req) => {
+        return axios.post('message/add-emoji-by-char', req)
     }
 }
 

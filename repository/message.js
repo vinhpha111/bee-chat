@@ -2,8 +2,9 @@ const mongoose = require('mongoose')
 const roomRepository = require('./room')
 const messageModel = require('../model/message')
 const roomUserModel = require('../model/roomUser')
+const messageEmojiModel = require('../model/messageEmoji')
 const messageSocket = require('../socket/message')
-const { TYPE_OF_MESSAGE } =  require('../config/constants')
+const { TYPE_OF_MESSAGE, TYPE_EMOJI } =  require('../config/constants')
 
 module.exports = {
     getListMessageInRoom: async (slugRoom, query = {}) => {
@@ -23,6 +24,20 @@ module.exports = {
                 $unset: ["author.hash_password", "author.refresh_token"]
             }
         ]
+        const getEmoji = {
+            $lookup: {
+                from: 'message_emojis',
+                let: { message_id: "$_id" },
+                pipeline: [
+                    {
+                        $match: { 
+                            $expr: { $eq: [ "$message", "$$message_id" ] }
+                        }
+                    }
+                ].concat(getAuthor),
+                as: 'emojis'
+            }
+        }
         if (room) {
             let messages = await messageModel.aggregate([
                 {
@@ -44,11 +59,13 @@ module.exports = {
                                 $match: { 
                                     $expr: { $eq: [ "$parent", "$$parent_id" ] }
                                 }
-                            }
+                            },
+                            getEmoji
                         ].concat(getAuthor),
                         as: 'childrens'
                     }
                 },
+                getEmoji,
                 {
                     $sort: {_id: -1}
                 },
@@ -124,5 +141,16 @@ module.exports = {
             { $limit : 10 }
         ].concat(getAuthor)).exec()
         return messages
+    },
+    addEmoji: async (req, type) => {
+        let data = {
+            author: req.userInfo._id,
+            type,
+            message: req.body.message_id,
+            emoji: JSON.stringify(req.body.emoji),
+            created_at: (new Date()).getTime()
+        }
+        const emoji = await (new messageEmojiModel(data)).save()
+        return emoji
     }
 }

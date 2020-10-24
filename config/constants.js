@@ -13,5 +13,9 @@ module.exports = {
     },
     TYPE_EMIT_TO_ROOM: {
         NEW_MESSAGE: 1
+    },
+    TYPE_EMOJI: {
+        CHAR: 1,
+        IMAGE: 2
     }
 }

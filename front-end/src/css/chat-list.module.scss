@@ -26,6 +26,16 @@
             }
         }
 
+        .emoji {
+            cursor: pointer;
+            font-size: 14px;
+            border: 1px solid darkgrey;
+            border-radius: 7px;
+            padding: 2px;
+            color: rgb(70, 70, 70);
+            margin-left: 4px;
+        }
+
         .add-emoji {
             font-size: 14px;
             margin-left: 10px;

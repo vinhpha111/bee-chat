@@ -1,5 +1,5 @@
 <template>
-    <div @click="isClickIn = true" :class="['emoji-box', classUnique]" :style="{ top: positionX, left: positionY }" v-if="display">
+    <div @click="isClickIn = true" :class="['emoji-box', classUnique]" :style="{ top: positionY, left: positionX }" v-if="display">
         <div :class="['emoji-box-header']">
             <span v-for="(section, key) in emojiJson" :key="key+'sdf'" @click="cateSelected = key" :class="['emoji-box-header-btn', { active: cateSelected === key }]">
                 {{ section.icon }}
@@ -22,8 +22,8 @@ export default {
             emojiJson: emojiJson,
             cateSelected: 'Smileys & Emotion',
             display: false,
-            positionX: 'calc(50% - 150px)',
-            positionY: 'calc(50vh - 100px)',
+            positionX: 0,
+            positionY: 0,
             isClickIn: false
         }
     },
@@ -40,9 +40,22 @@ export default {
                 self.isClickIn = false
             }, 100)
         },
-        show(x = null, y = null) {
-            this.positionX = x || this.positionX
-            this.positionY = y || this.positionY
+        show(mouseX = null, mouseY = null) {
+            const screenW = document.body.clientWidth
+            const screenH = document.body.clientHeight
+            const popupW = 300
+            const popupH = 200
+            let posX = mouseX || this.positionX
+            console.log(posX)
+            let posY = mouseY || this.positionY
+            if (screenW - mouseX < popupW) {
+                posX = screenW - popupW
+            }
+            if (screenH - mouseY < popupH) {
+                posY = screenH - popupH
+            }
+            this.positionX = `${posX}px`
+            this.positionY = `${posY}px`
             this.display = true
             this.isClickIn = true
         },

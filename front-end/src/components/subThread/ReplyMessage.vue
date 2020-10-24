@@ -5,7 +5,8 @@
 			<i @click="close()" class="fa fa-close close-btn"></i>
 		</div>
 		<MessageRow :message="messageReply" :is-thread="true"/>
-		<hr>
+		<hr class="w3-topbar w3-border-blue">
+		<MessageRow v-for="(child, index) in messageReply.childrens" :key="index" :message="child" :is-thread="true"/>
 		<TextInputChat />
 	</div>
 </template>

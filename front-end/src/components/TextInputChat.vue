@@ -6,7 +6,7 @@
 			<a :class="['icon', { 'selected': toolBarActive.link.active}]" href="javascript:void(0)"><i class="fa fa-link"></i></a>
 			<a :class="['icon', { 'selected': toolBarActive.insertunorderedlist.active}]" href="javascript:void(0)" @click="format('insertunorderedlist'); toolBarActive.insertunorderedlist.active = !toolBarActive.insertunorderedlist.active"><i class="fa fa-list-ul"></i></a>
 			<a :class="['icon', { 'selected': toolBarActive.formatBlock.active}]" href="javascript:void(0)" @click="format('formatBlock', 'blockquote'); toolBarActive.formatBlock.active = !toolBarActive.formatBlock.active"><i class="fa fa-quote-left"></i></a>
-			<a :class="['icon', 'icon-smile']" href="javascript:void(0)" @click="$refs['emoji-box'].show()"><i class="fa fa-smile-o"></i></a>
+			<a :class="['icon', 'icon-smile']" href="javascript:void(0)" @click="showEmojiBox"><i class="fa fa-smile-o"></i></a>
 		</div>
 		<div @click="checkActiveToolbar(); updateCurentSelection()" @keyup="checkActiveToolbar(); updateCurentSelection()" @input="emitHtml" id="htmlContent" contenteditable="true" class="text-input-editor">
 		</div>
@@ -147,6 +147,9 @@ export default {
 				sel.createRange().pasteHTML(html);
 			}
 			this.emitHtml()
+		},
+		showEmojiBox(event) {
+			this.$refs['emoji-box'].show(event.clientX, event.clientY)
 		}
 	}
 }
