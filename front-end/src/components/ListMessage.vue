@@ -9,6 +9,7 @@
 <script>
 import MessageRow from './MessageRow'
 import LoadingMessageSpin from './LoadingMessageSpin'
+import { notifySound } from '../helper/sound'
 export default {
     props: ['type'],
     components: {
@@ -59,6 +60,10 @@ export default {
             this.$store.dispatch('onSocket', {
                 on: room._id,
                 callback: (data) => {
+                    const user = this.$store.getters.getUserInfo
+                    if (user._id !== data.message.author._id) {
+                        notifySound()
+                    }
                     this.listMessage.push(data.message)
                     this.keepPositionInScroll()
                 }
@@ -102,6 +107,10 @@ export default {
                 }
             }
         }
+    },
+    destroyed() {
+        const room = this.$store.getters.getListRoom.find(room => room.slug === this.slugRoom)
+        this.$store.dispatch('removeListenSocket', room._id)
     },
 }
 </script>

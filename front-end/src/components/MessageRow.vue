@@ -17,11 +17,17 @@
 <script>
 import EmojiBox from './EmojiBox/EmojiBox'
 import { orderBy } from 'lodash'
+import { SERVER } from '../helper/constant'
 export default {
     name: "MessageRow",
     props: ['message', 'is-thread'],
     components: {
         EmojiBox
+    },
+    async created() {
+        await this.$store.dispatch('emitSocketCallback', {on: 'join', room: this.message._id,token: this.$store.getters.getToken})
+
+        this.listenSocker()
     },
     computed: {
         getDateTimeByFormat() {
@@ -113,7 +119,29 @@ export default {
         },
         getListUserName(members) {
             return members.map(m => m.fullname).join(', ')
+        },
+        listenSocker() {
+            this.$store.dispatch('onSocket', {
+                on: this.message._id,
+                callback: (data) => {
+                    switch (data.type) {
+                        case SERVER.TYPE_EMIT_TO_MESSAGE.AD_EMOJI:
+                            this.onSocketAddEmoji(data)
+                            break;
+                    
+                        default:
+                            break;
+                    }
+                }
+            })
+        },
+        onSocketAddEmoji(data) {
+            const { result: { emoji } } = data
+            this.message.emojis.push(emoji)
         }
+    },
+    destroyed() {
+        this.$store.dispatch('emitSocketCallback', {on: 'leave', room: this.message._id,token: this.$store.getters.getToken})
     },
 }
 </script>
