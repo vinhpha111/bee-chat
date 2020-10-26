@@ -1,4 +1,4 @@
-const { TYPE_EMIT_TO_ROOM } = require('../config/constants')
+const { TYPE_EMIT_TO_ROOM, TYPE_EMIT_TO_MESSAGE } = require('../config/constants')
 module.exports = {
   emitMessageToUserByRoom: async (data) => {
     const listUser = data.listUser
@@ -10,5 +10,12 @@ module.exports = {
         message
       })
     }
+  },
+  emitAddEmojiToMessage: async (emoji) => {
+    const res = {
+      type: TYPE_EMIT_TO_MESSAGE.AD_EMOJI,
+      result: { emoji }
+    }
+    io.in(emoji.message).emit(emoji.message, res)
   }
 }

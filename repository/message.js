@@ -151,6 +151,12 @@ module.exports = {
             created_at: (new Date()).getTime()
         }
         const emoji = await (new messageEmojiModel(data)).save()
+        try {
+            const emojiEmit = await messageEmojiModel.findById(emoji._id).populate('author')
+            messageSocket.emitAddEmojiToMessage(emojiEmit)
+        } catch (error) {
+            console.log(error)
+        }
         return emoji
     }
 }
