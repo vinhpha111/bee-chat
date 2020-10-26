@@ -1,5 +1,5 @@
 <template>
-	<div class="reply-message">
+	<div class="reply-message" v-if="messageReply">
 		<div class="reply-message-header">
 			<p class="label">Reply message</p>
 			<i @click="close()" class="fa fa-close close-btn"></i>
