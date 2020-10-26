@@ -55,7 +55,6 @@ export default {
 .sub-thread {
 	border-left: 1px solid lightblue;
 	position: relative;
-	max-width: 500px;
 	min-width: 300px;
 	&-drag-resize {
 		position: absolute;
