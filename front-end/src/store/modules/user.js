@@ -41,6 +41,15 @@ const actions = {
                 return res
             })
     },
+    logoutUser: (store) => {
+        return axios.post('user/logout', { refreshToken: store.getters.getRefreshToken })
+            .then(res => {
+                store.commit('setToken', '')
+                store.commit('setRefreshToken', '')
+                store.commit('setUserInfo', '')
+                return res
+            })
+    },
     getUser: () => {
         return axios.get('user/get-auth-user-info')
     },

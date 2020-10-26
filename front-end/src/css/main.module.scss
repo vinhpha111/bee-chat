@@ -21,8 +21,12 @@ body {
         }
         .header {
             height: 30px;
-            h5 {
-                margin: 0px;
+            position: relative;
+            .option {
+                float: right;
+                font-size: 14px;
+                margin: 8px;
+                cursor: pointer;
             }
         }
         .main {
