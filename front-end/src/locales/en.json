@@ -1,7 +1,10 @@
 {
   "sidebar": {
     "romm_label": "Room",
-    "saved_link": "Saved"
+    "saved_link": "Saved",
+    "edit_account": "Edit account",
+    "add_user": "Add new user",
+    "logout": "Logout"
   },
   "add_room_page": {
     "title": "Create new room",

@@ -20,6 +20,11 @@ module.exports = {
         user.tokenData = tokenData
         return res.json({user})
     },
+    logout: async (req, res) => {
+        const refreshToken = req.body.refreshToken
+        const user = await userRepository.removeRefreshToken(req.userInfo._id, refreshToken)
+        return res.status(200).json(user)
+    },
     getToken: async (req, res) => {
         const refreshToken = req.body.refreshToken
         if (refreshToken) {

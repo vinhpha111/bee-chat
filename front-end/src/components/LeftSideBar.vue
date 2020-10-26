@@ -1,7 +1,9 @@
 <template>
     <div class="w3-border">
         <div class="header w3-teal">
-            <h5>{{$store.getters.getUserInfo ? $store.getters.getUserInfo.fullname : ''}}</h5>
+            <label>{{$store.getters.getUserInfo ? $store.getters.getUserInfo.fullname : ''}}</label>
+            <i @click="showAccountDropdown = true" class="fa fa-gear option"></i>
+            <optionAccountDropdown @close="showAccountDropdown = false" v-if="showAccountDropdown"/>
         </div>
         <div class="main">
             <ul class="w3-ul w3-border">
@@ -17,13 +19,17 @@
 
 <script>
 import ListRoomInSidebar from './ListRoomInSidebar'
+import optionAccountDropdown from './optionAccountDropdown'
 export default {
     components: {
-        ListRoomInSidebar
+        ListRoomInSidebar,
+        optionAccountDropdown
     },
     data() {
         return {
+            showAccountDropdown: false
         }
-    }
+    },
+
 }
 </script>

@@ -35,6 +35,12 @@ module.exports = {
         }
         return false
     },
+    removeRefreshToken: async (id, refreshToken) => {
+        await userModel.updateOne({ _id: id }, { $pullAll: { refresh_token: [refreshToken] } })
+        const user = userModel.findById(id)
+        return user
+    },
+
     // return list user match email or name with string
     findByString: async (req) => {
         str = req.query.str.toLowerCase()

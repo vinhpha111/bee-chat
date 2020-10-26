@@ -29,8 +29,20 @@ const routes = [
     children: [
       {
         path: '/',
-        name: 'Index',
+        name: 'index',
         component:() => import('../views/Index.vue'),
+        meta: { auth: [1, 2] }
+      },
+      {
+        path: '/account/edit',
+        name: 'account.edit',
+        component:() => import('../views/account/edit.vue'),
+        meta: { auth: [1, 2] }
+      },
+      {
+        path: '/user/add',
+        name: 'user.add',
+        component:() => import('../views/user/add.vue'),
         meta: { auth: [1, 2] }
       },
       {
