@@ -13,7 +13,14 @@ module.exports = {
   },
   emitAddEmojiToMessage: async (emoji) => {
     const res = {
-      type: TYPE_EMIT_TO_MESSAGE.AD_EMOJI,
+      type: TYPE_EMIT_TO_MESSAGE.ADD_EMOJI,
+      result: { emoji }
+    }
+    io.in(emoji.message).emit(emoji.message, res)
+  },
+  emitRemoveEmojiFromMessage: async (emoji) => {
+    const res = {
+      type: TYPE_EMIT_TO_MESSAGE.REMOVE_EMOJI,
       result: { emoji }
     }
     io.in(emoji.message).emit(emoji.message, res)

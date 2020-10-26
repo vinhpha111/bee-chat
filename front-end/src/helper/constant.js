@@ -20,7 +20,8 @@ export const SERVER = {
         NEW_MESSAGE: 1
     },
     TYPE_EMIT_TO_MESSAGE: {
-        AD_EMOJI: 1
+        ADD_EMOJI: 1,
+        REMOVE_EMOJI: 2
     },
     TYPE_EMOJI: {
         CHAR: 1,

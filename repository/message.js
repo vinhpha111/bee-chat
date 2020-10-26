@@ -5,6 +5,7 @@ const roomUserModel = require('../model/roomUser')
 const messageEmojiModel = require('../model/messageEmoji')
 const messageSocket = require('../socket/message')
 const { TYPE_OF_MESSAGE, TYPE_EMOJI } =  require('../config/constants')
+const { findByIdAndDelete } = require('../model/roomUser')
 
 module.exports = {
     getListMessageInRoom: async (slugRoom, query = {}) => {
@@ -154,6 +155,15 @@ module.exports = {
         try {
             const emojiEmit = await messageEmojiModel.findById(emoji._id).populate('author')
             messageSocket.emitAddEmojiToMessage(emojiEmit)
+        } catch (error) {
+            console.log(error)
+        }
+        return emoji
+    },
+    removeEmoji: async (req) => {
+        const emoji = await messageEmojiModel.findByIdAndDelete(req.body.id)
+        try {
+            messageSocket.emitRemoveEmojiFromMessage(emoji)
         } catch (error) {
             console.log(error)
         }

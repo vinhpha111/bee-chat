@@ -46,7 +46,6 @@ export default {
             const popupW = 300
             const popupH = 200
             let posX = mouseX || this.positionX
-            console.log(posX)
             let posY = mouseY || this.positionY
             if (screenW - mouseX < popupW) {
                 posX = screenW - popupW

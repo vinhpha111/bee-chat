@@ -38,10 +38,7 @@ export default {
         return {
             isShowSideBar: false,
         };
-    },
-    created() {
-        console.log(this.$store.getters['subThread/getType'])
-    },
+    }
 };
 </script>
 

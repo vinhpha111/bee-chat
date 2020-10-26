@@ -9,5 +9,9 @@ module.exports = {
     addEmojiByChar: async (req, res) => {
         let emoji = await messageRepository.addEmoji(req, TYPE_EMOJI.CHAR)
         return res.json(emoji)
+    },
+    removeEmoji: async (req, res) => {
+        let emoji = await messageRepository.removeEmoji(req)
+        return res.json(emoji)
     }
 }

@@ -8,7 +8,7 @@
         <div v-html="message.content"></div>
         <div class="msg-item-footer">
             <span v-if="!isThread" class="reply" @click="replyMessage(message)" :title="getListUserInChild(message.childrens)"><i class="fa fa-share-square-o"></i> reply <i v-if="message.childrens.length > 0">({{message.childrens.length}})</i></span>
-            <span v-for="(emoji, index) in listEmoji" :key="index" :title="getListUserName(emoji.members)" class="emoji">{{emoji.emoji.char}} {{emoji.count}}</span>
+            <span v-for="(emoji, index) in listEmoji" :key="index" :title="getListUserName(emoji.members)" @click="addEmoji(emoji.emoji)" class="emoji">{{emoji.emoji.char}} {{emoji.count}}</span>
             <span class="add-emoji" :title="$t('message_item.add_emoji')" @click="showEmoji"><i class="fa fa-smile-o"></i></span>
         </div>
         <EmojiBox @selectEmoji="addEmoji" ref="emoji-box"/>
@@ -26,8 +26,8 @@ export default {
     },
     async created() {
         await this.$store.dispatch('emitSocketCallback', {on: 'join', room: this.message._id,token: this.$store.getters.getToken})
-
-        this.listenSocker()
+        await this.$store.dispatch('removeListenSocket', this.message._id)
+        this.listenSocker() 
     },
     computed: {
         getDateTimeByFormat() {
@@ -106,16 +106,26 @@ export default {
             this.$refs['emoji-box'].show(event.clientX, event.clientY)
         },
         addEmoji(emoji) {
-            console.log(emoji)
-            const data = {
-                emoji,
-                message_id: this.message._id
+            const emojiIdHasAdd = this.checkHasAddEmoji(emoji)
+            if (emojiIdHasAdd) {
+                this.$store.dispatch('removeEmoji', { id: emojiIdHasAdd })
+            } else {
+                const data = {
+                    emoji,
+                    message_id: this.message._id
+                }
+                this.$store.dispatch('addEmojiChar', data)
             }
-            this.$store.dispatch('addEmojiChar', data).then((data) => {
-                console.log(data)
-            }).catch(err => {
-                console.log(err)
-            })
+        },
+        checkHasAddEmoji(emoji) {
+            const currentUser = this.$store.getters.getUserInfo
+            for (let i = 0; i < this.message.emojis.length; i++) {
+                const currentEmoji = JSON.parse(this.message.emojis[i].emoji)
+                if (this.message.emojis[i].author._id === currentUser._id && currentEmoji.char === emoji.char) {
+                    return this.message.emojis[i]._id
+                }
+            }
+            return null
         },
         getListUserName(members) {
             return members.map(m => m.fullname).join(', ')
@@ -125,10 +135,12 @@ export default {
                 on: this.message._id,
                 callback: (data) => {
                     switch (data.type) {
-                        case SERVER.TYPE_EMIT_TO_MESSAGE.AD_EMOJI:
+                        case SERVER.TYPE_EMIT_TO_MESSAGE.ADD_EMOJI:
                             this.onSocketAddEmoji(data)
                             break;
-                    
+                        case SERVER.TYPE_EMIT_TO_MESSAGE.REMOVE_EMOJI:
+                            this.onSocketRemoveEmoji(data)
+                            break
                         default:
                             break;
                     }
@@ -138,10 +150,13 @@ export default {
         onSocketAddEmoji(data) {
             const { result: { emoji } } = data
             this.message.emojis.push(emoji)
+        },
+        onSocketRemoveEmoji(data) {
+            const { result: { emoji } } = data
+            this.message.emojis = this.message.emojis.filter(currentEmoji => {
+                return currentEmoji._id !== emoji._id
+            })
         }
-    },
-    destroyed() {
-        this.$store.dispatch('emitSocketCallback', {on: 'leave', room: this.message._id,token: this.$store.getters.getToken})
     },
 }
 </script>

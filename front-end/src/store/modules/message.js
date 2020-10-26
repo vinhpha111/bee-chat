@@ -26,6 +26,9 @@ const actions = {
     },
     addEmojiChar: (state, req) => {
         return axios.post('message/add-emoji-by-char', req)
+    },
+    removeEmoji: (state, req) => {
+        return axios.post('message/remove-emoji', req)
     }
 }
 
