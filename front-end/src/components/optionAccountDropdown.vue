@@ -1,9 +1,9 @@
 <template>
     <div class="option-dropdown" @click="clickIn = true">
         <ul>
-            <li @click="$router.push({name: 'user.add'})">{{ $t('sidebar.add_user') }}</li>
-            <li @click="$router.push({name: 'account.edit'})">{{ $t('sidebar.edit_account') }}</li>
-            <li @click="logout()">{{ $t('sidebar.logout') }}</li>
+            <li @click="$router.push({name: 'user.add'}); $emit('close')"><i class="fa fa-user-plus"></i> {{ $t('sidebar.add_user') }}</li>
+            <li @click="$router.push({name: 'account.edit'}); $emit('close')"><i class="fa fa-edit"></i> {{ $t('sidebar.edit_account') }}</li>
+            <li @click="logout(); $emit('close')"><i class="fa fa-sign-out"></i> {{ $t('sidebar.logout') }}</li>
         </ul>
     </div>
 </template>
@@ -38,6 +38,7 @@ export default {
         li {
             cursor: pointer;
             padding: 4px 10px;
+            font-size: 12px;
             &:nth-child(n + 2) {
                 border-top: 1px solid darkgray;
             }

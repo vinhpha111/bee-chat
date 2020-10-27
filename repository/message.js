@@ -116,6 +116,20 @@ module.exports = {
                 $unset: ["author.hash_password", "author.refresh_token"]
             }
         ]
+        const getEmoji = {
+            $lookup: {
+                from: 'message_emojis',
+                let: { message_id: "$_id" },
+                pipeline: [
+                    {
+                        $match: { 
+                            $expr: { $eq: [ "$message", "$$message_id" ] }
+                        }
+                    }
+                ].concat(getAuthor),
+                as: 'emojis'
+            }
+        }
         let messages = await messageModel.aggregate([
             {
                 $match: {
@@ -136,6 +150,7 @@ module.exports = {
                     as: 'childrens'
                 }
             },
+            getEmoji,
             {
                 $sort: {_id: -1}
             },

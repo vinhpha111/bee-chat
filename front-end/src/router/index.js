@@ -2,6 +2,15 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import auth from './auth'
 
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(error => {
+    if (error.name != "NavigationDuplicated") {
+      throw error;
+    }
+  })
+};
+
 Vue.use(VueRouter)
 
 const routes = [

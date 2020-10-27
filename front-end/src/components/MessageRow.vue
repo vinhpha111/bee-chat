@@ -27,7 +27,7 @@ export default {
     async created() {
         await this.$store.dispatch('emitSocketCallback', {on: 'join', room: this.message._id,token: this.$store.getters.getToken})
         await this.$store.dispatch('removeListenSocket', this.message._id)
-        this.listenSocker() 
+        await this.listenSocker() 
     },
     computed: {
         getDateTimeByFormat() {

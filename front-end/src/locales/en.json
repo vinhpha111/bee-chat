@@ -20,5 +20,27 @@
   "message_item": {
     "reply": "reply",
     "add_emoji": "Add emoji"
+  },
+  "account": {
+    "name": "Name",
+    "name_placeholder": "Please enter name",
+    "email": "Email",
+    "email_placeholder": "Please enter email",
+    "role": "Role",
+    "avatar": "Avatar",
+    "password": "Password",
+    "password_placeholder": "Input password",
+    "password_old": "Old password",
+    "password_old_placeholder": "Input old password",
+    "password_new": "New password",
+    "password_new_placeholder": "Input new password",
+    "password_new_placeholder_confirm": "Input new password again",
+    "edit_account_page_title": "Edit account"
+  },
+  "common": {
+    "save_btn": "Save",
+    "cancel_btn": "Cancel",
+    "admin_role": "Admin",
+    "guest_role": "Guest"
   }
 }
