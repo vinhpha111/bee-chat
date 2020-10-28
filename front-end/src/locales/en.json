@@ -35,7 +35,8 @@
     "password_new": "New password",
     "password_new_placeholder": "Input new password",
     "password_new_placeholder_confirm": "Input new password again",
-    "edit_account_page_title": "Edit account"
+    "edit_account_page_title": "Edit account",
+    "edit_avatar_confirm_msg": "Do you sure want to change avatar?"
   },
   "common": {
     "save_btn": "Save",
