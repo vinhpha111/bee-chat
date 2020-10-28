@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt')
 const saltRounds = process.env.BCRYPT_SALT_ROUNDS || 10
 var jwt = require('jsonwebtoken')
 const jwtSecret = process.env.JWT_SECRET || 'secret'
-const formidable = require('formidable')
 
 module.exports = {
     login: async (req, res) => {
@@ -51,13 +50,6 @@ module.exports = {
         return res.status(200).json(users)
     },
     editAccount: async (req, res) => {
-        const form = formidable({ multiples: true, uploadDir: `${__dirname}/../upload/avatar` })
-        form.parse(req, (err, fields, files) => {
-            if (err) {
-            next(err)
-            return
-            }
-            return res.json({ fields, files })
-        })
+        return res.json(req.body)
     }
 }
