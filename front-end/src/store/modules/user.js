@@ -60,6 +60,16 @@ const actions = {
         return axios.get('user/find-by-string', {
             params
         })
+    },
+    updateAccountInfo: (store, formData) => {
+        return axios.post('user/account-update-info',
+            formData,
+            // {
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data'
+            //     }
+            // }
+        )
     }
 }
 

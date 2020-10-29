@@ -1,9 +1,12 @@
 const userModel = require('../model/user')
 const userRepository = require('../repository/user')
 const bcrypt = require('bcrypt')
-const saltRounds = process.env.BCRYPT_SALT_ROUNDS || 10
+const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10
 var jwt = require('jsonwebtoken')
 const jwtSecret = process.env.JWT_SECRET || 'secret'
+const path = require('path')
+const helper = require('../config/helper')
+const fs = require('fs')
 
 module.exports = {
     login: async (req, res) => {
@@ -48,5 +51,37 @@ module.exports = {
     findByString: async (req, res) => {
         const users = await userRepository.findByString(req)
         return res.status(200).json(users)
+    },
+    editAccount: async (req, res) => {
+        let user = await userModel.findById(req.userInfo._id).select('+hash_password').exec()
+        if (req.body.fullname && req.body.fullname.length > 0) {
+            user.fullname = req.body.fullname
+        }
+        if (req.body.email && req.body.email.length > 0) {
+            user.email = req.body.email
+        }
+        if (req.body.password && req.body.new_password && req.body.new_password_confirm) {
+            if (await bcrypt.compare(req.body.password, user.hash_password)) {
+                user.hash_password = await bcrypt.hash(req.body.new_password, saltRounds)
+            } else {
+                return res.status(422).json({ errors: [{
+                    param: 'password',
+                    msg: 'validation.password_not_correct'
+                }]})
+            }
+        }
+        let avatarRemove = null
+        if (req.body.avatar) {
+            avatarRemove = user.avatar
+            user.avatar = path.basename(req.body.avatar)
+        }
+        await user.save()
+        if (avatarRemove) {
+            fs.unlink(helper.rootPath(`upload/avatar/${avatarRemove}`), (err) => {
+                if (err) throw err
+            })
+        }
+        user = await userModel.findById(req.userInfo._id)
+        return res.json(user)
     }
 }
