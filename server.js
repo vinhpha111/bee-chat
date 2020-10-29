@@ -28,6 +28,7 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 
 app.use('/api', apiRouter)
 app.use(express.static('front-end/dist'))
+app.use(express.static('upload'))
 app.get('/*',function(req,res) {
   res.sendFile(path.join(__dirname+'/front-end/dist/index.html'));
 });

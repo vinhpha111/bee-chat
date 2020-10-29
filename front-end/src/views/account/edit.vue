@@ -7,6 +7,9 @@
                 <div class="account-edit-row-content">
                     <input v-if="userInfo.fullname_being_edit" type="text" v-model="userInfo.fullname_edit"
                         :placeholder="$t('account.name_placeholder')">
+                    <div v-for="(error, index) in errors" :key="index">
+                        <p v-if="error.param === 'fullname'" class="error">{{$t(error.msg, {max: 20})}}</p>
+                    </div>
                     <div v-if="!userInfo.fullname_being_edit">
                         <label>{{userInfo.fullname}}</label>
                         <i @click="showEdit('fullname')" class="fa fa-pencil-square-o edit-action"></i>
@@ -24,6 +27,9 @@
                 <div class="account-edit-row-content">
                     <input v-if="userInfo.email_being_edit" type="email" v-model="userInfo.email_edit"
                         :placeholder="$t('account.email_placeholder')">
+                    <div v-for="(error, index) in errors" :key="index">
+                        <p v-if="error.param === 'email'" class="error">{{$t(error.msg, {max: 20})}}</p>
+                    </div>
                     <div v-if="!userInfo.email_being_edit">
                         <label>{{userInfo.email}}</label>
                         <i @click="showEdit('email')" class="fa fa-pencil-square-o edit-action"></i>
@@ -45,11 +51,26 @@
                 <div class="account-edit-row-content">
                     <input v-if="userInfo.password_being_edit" type="password" v-model="userInfo.password_edit"
                         :placeholder="$t('account.password_old_placeholder')">
+                    <div>
+                        <div v-for="(error, index) in errors" :key="index">
+                            <p v-if="error.param === 'password'" class="error">{{$t(error.msg)}}</p>
+                        </div>
+                    </div>
                     <input v-if="userInfo.password_being_edit" type="password" v-model="userInfo.new_password_edit"
                         :placeholder="$t('account.password_new_placeholder')">
+                    <div>
+                        <div v-for="(error, index) in errors" :key="index">
+                            <p v-if="error.param === 'new_password'" class="error">{{$t(error.msg)}}</p>
+                        </div>
+                    </div>
                     <input v-if="userInfo.password_being_edit" type="password"
                         v-model="userInfo.new_password_confirm_edit"
                         :placeholder="$t('account.password_new_placeholder_confirm')">
+                    <div>
+                        <div v-for="(error, index) in errors" :key="index">
+                            <p v-if="error.param === 'new_password_confirm'" class="error">{{$t(error.msg)}}</p>
+                        </div>
+                    </div>
                     <div v-if="!userInfo.password_being_edit">
                         <label>********</label>
                         <i @click="showEdit('password', 'new_password', 'new_password_confirm')"
@@ -67,8 +88,11 @@
                 <label>{{ $t('account.avatar') }}</label>
                 <div class="account-edit-row-content">
                     <div class="avatar-input">
-                        <img v-if="userInfo.avatr" :src="userInfo.avatr">
-                        <input ref="avatar" @change="confirmChangeAvatar()" type="file">
+                        <img v-if="userInfo.avatar" :src="userInfo.avatar">
+                        <input id="avatar_file" ref="avatar" @change="confirmChangeAvatar()" type="file">
+                    </div>
+                    <div v-for="(error, index) in errors" :key="index">
+                        <p v-if="error.param === 'avatar'" class="error">{{$t(error.msg)}}</p>
                     </div>
                 </div>
             </div>
@@ -91,15 +115,25 @@ export default {
             confirmType: null,
             confirmMsg: null,
             avatarFile: null,
+            errors : []
         }
     },
     created() {
-        this.$store.dispatch('getUser').then(data => {
-            this.userInfo = data.data
-            this.userInfo.avatr = this.userInfo.avatr || generateAvatarUrlFromName(this.userInfo.fullname)
-        })
+        this.init()
     },
     methods: {
+        init() {
+            this.userInfo = {}
+            this.ROLE = SERVER.ROLE_OF_USER
+            this.confirmType = null
+            this.confirmMsg = null
+            this.avatarFile = null
+            this.errors = []
+            this.$store.dispatch('getUser').then(data => {
+                this.userInfo = data.data
+                this.userInfo.avatar = this.userInfo.avatar_path || generateAvatarUrlFromName(this.userInfo.fullname)
+            })
+        },
         showEdit(...fields) {
             for (let i = 0; i < fields.length; i++) {
                 const field = fields[i]
@@ -110,6 +144,7 @@ export default {
         cancelEdit(...fields) {
             for (let i = 0; i < fields.length; i++) {
                 const field = fields[i]
+                this.errors = this.errors.filter(err => err.param !== field)
                 this.$set(this.userInfo, field + "_edit", this.userInfo[field])
                 this.$set(this.userInfo, field + "_being_edit", false)
             }
@@ -124,6 +159,7 @@ export default {
             this.confirmType = null
             this.confirmMsg = null
             this.avatarFile = null
+            document.getElementById('avatar_file').value = ''
         },
         confirmOk() {
             switch (this.confirmType) {
@@ -143,114 +179,23 @@ export default {
                         break;
                     default:
                         if (['fullname', 'email', 'password', 'new_password', 'new_password_confirm'].indexOf(field) !== -1) {
-                            formData.append(field, this.userInfo[field + '_edit'])
+                            formData.append(field, this.userInfo[field + '_edit'] || '')
                         }
                         break;
                 }
             }
-            this.$store.dispatch('updateAccountInfo', formData)
+            this.$store.commit('setLoading', true)
+            this.$store.dispatch('updateAccountInfo', formData).then((res) => {
+                this.$store.commit('setLoading', false)
+                this.$store.commit('setUserInfo', res.data)
+                this.init()
+            }).catch(err => {
+                if (err.response.status === 422) {
+                    this.errors = err.response.data.errors   
+                }
+                this.$store.commit('setLoading', false)
+            })
         }
     },
 }
 </script>
-
-<style lang="scss" scoped>
-.account-edit {
-    width: 500px;
-    max-width: 100%;
-    padding: 10px;
-    border: 1px darkgray solid;
-    border-radius: 5px;
-    margin: auto;
-
-    &-row {
-        width: 100%;
-        display: flex;
-        margin-top: 8px;
-
-        label {
-            width: 120px;
-            text-align: right;
-            padding-right: 10px;
-        }
-
-        &-content {
-            width: calc(100% - 120px);
-
-            input {
-                width: 100%;
-
-                &:nth-child(n + 2) {
-                    margin-top: 10px;
-                }
-            }
-
-            .edit-action {
-                cursor: pointer;
-                margin-left: 5px;
-
-                &:hover {
-                    color: orangered;
-                }
-            }
-
-            .avatar-input {
-                width: 80px;
-                height: 80px;
-                border: 1px darkgray dashed;
-                border-radius: 5px;
-                position: relative;
-
-                &:hover {
-                    border-width: 3px;
-                }
-
-                input {
-                    position: absolute;
-                    opacity: 0;
-                    width: 100%;
-                    height: 100%;
-                    top: 0;
-                    left: 0;
-                    cursor: pointer;
-
-                    &::-webkit-file-upload-button {
-                        cursor: pointer;
-                    }
-                }
-
-                img {
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                    top: 0;
-                    left: 0;
-                }
-            }
-
-            &-action {
-                button {
-                    background: none;
-                    border: none;
-                    cursor: pointer;
-                    margin-right: 10px;
-                    border-radius: 5px;
-                    outline: none;
-
-                    &:hover {
-                        text-decoration-line: underline;
-                    }
-
-                    &.submit-btn {
-                        color: orangered;
-                    }
-
-                    &.cancel-btn {
-                        color: blue;
-                    }
-                }
-            }
-        }
-    }
-}
-</style>

@@ -6,7 +6,15 @@ const userSchema = new mongoose.Schema({
     hash_password: { type: String, select: false },
     online: Boolean,
     refresh_token: { type: [String], select: false },
-    role: Number
+    role: Number,
+    avatar: String
 });
+
+userSchema.set('toObject', { virtuals: true })
+userSchema.set('toJSON', { virtuals: true })
+
+userSchema.virtual('avatar_path').get(function() {
+    return this.avatar ? '/avatar/' + this.avatar : null
+})
 
 module.exports = mongoose.model('users', userSchema);

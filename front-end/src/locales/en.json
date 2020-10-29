@@ -43,5 +43,13 @@
     "cancel_btn": "Cancel",
     "admin_role": "Admin",
     "guest_role": "Guest"
+  },
+  "validation": {
+    "empty": "Cannot empty",
+    "email": "Must is email",
+    "max_length": "max is %{max} character",
+    "pass_confirm_not_correct": "Password confirm is not correct",
+    "avatar_not_valid": "Avatar is not valid",
+    "password_not_correct": "Password is not correct"
   }
 }
