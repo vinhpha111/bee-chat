@@ -89,10 +89,10 @@
                 <div class="account-edit-row-content">
                     <div class="avatar-input">
                         <img v-if="userInfo.avatar" :src="userInfo.avatar">
-                        <input id="avatar_file" ref="avatar" @change="confirmChangeAvatar()" type="file">
+                        <input id="avatar_file" ref="avatar" @change="confirmChangeAvatar()" type="file" accept="image/x-png,image/gif,image/jpeg">
                     </div>
                     <div v-for="(error, index) in errors" :key="index">
-                        <p v-if="error.param === 'avatar'" class="error">{{$t(error.msg)}}</p>
+                        <p v-if="error.param === 'avatar'" class="error">{{$t(error.msg, {size: "2Mb"})}}</p>
                     </div>
                 </div>
             </div>
@@ -150,10 +150,23 @@ export default {
             }
         },
         confirmChangeAvatar() {
-            this.avatarFile = this.$refs.avatar.files[0]
-            this.confirmType = 'editAvatar'
-            this.confirmMsg = this.$t('account.edit_avatar_confirm_msg')
-            this.$refs['modal-confirm'].showModal()
+            if (this.validAvatarInput()) {
+                this.avatarFile = this.$refs.avatar.files[0]
+                this.confirmType = 'editAvatar'
+                this.confirmMsg = this.$t('account.edit_avatar_confirm_msg')
+                this.$refs['modal-confirm'].showModal()
+            }
+        },
+        validAvatarInput() {
+            const file = this.$refs.avatar.files[0]
+            if (file.size >= 1024*1024*2) {
+                this.errors = [{
+                    param: "avatar",
+                    msg: "validation.max_size_avatar"
+                }]
+                return false
+            }
+            return true
         },
         confirmCancel() {
             this.confirmType = null

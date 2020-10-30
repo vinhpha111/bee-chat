@@ -45,4 +45,5 @@ export default {
 <style lang="scss">
 @import "./css/main.module.scss";
 @import "./css/text-editor.module.scss";
+@import "./css/edit-account.scss";
 </style>

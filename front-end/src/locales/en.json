@@ -50,6 +50,7 @@
     "max_length": "max is %{max} character",
     "pass_confirm_not_correct": "Password confirm is not correct",
     "avatar_not_valid": "Avatar is not valid",
+    "max_size_avatar": "Max size is %{size}",
     "password_not_correct": "Password is not correct"
   }
 }

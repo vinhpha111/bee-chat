@@ -1,5 +1,6 @@
 const { body, validationResult } = require('express-validator');
 const formidable = require('formidable')
+const Jimp = require('jimp')
 
 module.exports = [
     // upload avatar if exist
@@ -7,7 +8,7 @@ module.exports = [
         const form = formidable({
             multiples: true,
             uploadDir: `${__dirname}/../../../upload/avatar`,
-            maxFileSize: 1024 * 1024
+            maxFileSize: 1024 * 1024 * 2
         })
         let errors = []
         form.onPart = function (part) {
@@ -22,7 +23,7 @@ module.exports = [
             }
         }
         await new Promise((resolve, reject) => {
-            form.parse(req, (err, fields, files) => {
+            form.parse(req, async (err, fields, files) => {
                 if (err) {
                     errors.push({
                         param: 'avatar',
@@ -35,6 +36,16 @@ module.exports = [
                     req.body[key] = fields[key]
                 }
                 for (let key in files) {
+                    await Jimp.read(files[key].path)
+                        .then(lenna => {
+                            return lenna
+                                .resize(120, Jimp.AUTO) // resize
+                                .quality(60) // set JPEG quality
+                                .write(files[key].path) // save
+                        })
+                        .catch(err => {
+                            console.error(err)
+                        });
                     req.body[key] = files[key].path
                 }
                 resolve()
