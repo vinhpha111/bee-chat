@@ -1,11 +1,11 @@
 <template>
-    <div v-if="message" :class="[messageOwner ? 'w3-border-blue w3-leftbar': 'w3-border','text-input-editor-view message-row w3-panel w3-border msg-item w3-display-container']">
+    <div v-if="message" :class="['text-input-editor-view message-row msg-item w3-display-container']">
         <label :class="[messageOwner ? 'w3-text-blue': 'w3-text-light-blue', 'w3-text-blue user-link']"><b>{{message.author.fullname}}</b></label>
         <label :title="getDateTimeByFormat(message.created_at, '%y/%m/%d %h:%i')" 
             class="w3-margin-left w3-text-blue-grey w3-tiny">
             <i>{{getDateTimeByFormat(message.created_at, '%h:%i')}}</i>
         </label>
-        <div v-html="message.content"></div>
+        <div class="content" v-html="message.content"></div>
         <div class="msg-item-footer">
             <span v-if="!isThread" class="reply" @click="replyMessage(message)" :title="getListUserInChild(message.childrens)"><i class="fa fa-share-square-o"></i> reply <i v-if="message.childrens.length > 0">({{message.childrens.length}})</i></span>
             <span v-for="(emoji, index) in listEmoji" :key="index" :title="getListUserName(emoji.members)" @click="addEmoji(emoji.emoji)" class="emoji">{{emoji.emoji.char}} {{emoji.count}}</span>
@@ -25,9 +25,11 @@ export default {
         EmojiBox
     },
     async created() {
-        await this.$store.dispatch('emitSocketCallback', {on: 'join', room: this.message._id,token: this.$store.getters.getToken})
-        await this.$store.dispatch('removeListenSocket', this.message._id)
-        await this.listenSocker() 
+        (async () => {
+            await this.$store.dispatch('emitSocketCallback', {on: 'join', room: this.message._id,token: this.$store.getters.getToken})
+            await this.$store.dispatch('removeListenSocket', this.message._id)
+            await this.listenSocker()
+        })()
     },
     computed: {
         getDateTimeByFormat() {

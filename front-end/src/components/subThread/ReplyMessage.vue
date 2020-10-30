@@ -5,20 +5,20 @@
 			<i @click="close()" class="fa fa-close close-btn"></i>
 		</div>
 		<MessageRow :message="messageReply" :is-thread="true"/>
-		<hr class="w3-topbar w3-border-blue">
+		<hr>
 		<MessageRow v-for="(child, index) in messageReply.childrens" :key="index" :message="child" :is-thread="true"/>
-		<TextInputChat />
+		<FooterChatBox  type="reply" />
 	</div>
 </template>
 
 <script>
-import TextInputChat from '../TextInputChat'
 import MessageRow from '../MessageRow'
+import FooterChatBox from '../FooterChatBox'
 import eventBus from '../../helper/eventBus'
 export default {
 	components: {
-		TextInputChat,
-		MessageRow
+		MessageRow,
+		FooterChatBox
 	},
 	data() {
 		return {
@@ -47,16 +47,16 @@ export default {
 <style lang="scss">
 .reply-message {
 	&-header {
-		height: 30px;
-		background-color: mediumturquoise;
+		height: 40px;
 		padding-left: 10px;
 		position: relative;
 		padding-top: 3px;
+		border: 1px solid darkgray;
 		.label {
 			font-size: 15px;
-			color: white;
 			margin: 0;
 			font-weight: bold;
+			color: gray;
 		}
 		.close-btn {
 			position: absolute;
@@ -65,7 +65,7 @@ export default {
 			top: 8px;
 			cursor: pointer;
 			&:hover {
-				color: white;
+				color: orange;
 			}
 		}
 	}

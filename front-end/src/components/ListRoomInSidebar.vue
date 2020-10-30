@@ -1,12 +1,12 @@
 <template>
   <div>
-      <ul class="w3-ul w3-border list-room">
-          <li class="w3-green w3-center">
+      <ul class="list-room">
+          <li class="room-label">
               {{ $t('sidebar.romm_label') }}
               <router-link  class="add-room-btn" :to="`/room/add`">+</router-link>
           </li>
-          <li v-for="(room, index) in $store.getters.getListRoom" :class="[{'w3-light-blue': checkActive(room.slug)}]" :key="index">
-              <router-link :to="`/room/${room.slug}`">{{room.name}}</router-link>
+          <li v-for="(room, index) in $store.getters.getListRoom" :class="[{'active': checkActive(room.slug)}]" :key="index">
+              <router-link class="room-link" :to="`/room/${room.slug}`">{{room.name}}</router-link>
           </li>
       </ul>
   </div>

@@ -6,6 +6,10 @@
 .msg-item {
     padding: 8px;
     padding-bottom: 3px;
+    border-top: solid 1px lightgray;
+    &:hover {
+        background-color: rgba(173, 216, 230, 0.187);
+    }
     .list-msg-child {
         margin-top: 8px;
         .msg-item-child {
@@ -14,6 +18,12 @@
     }
     .user-link {
         cursor: pointer;
+    }
+
+    .content {
+        padding: 5px;
+        border: solid 1px lightgray;
+        border-radius: 5px;
     }
 
     &-footer {

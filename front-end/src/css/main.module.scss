@@ -5,8 +5,10 @@ body {
     width: 100%;
     display: inline-flex;
     .left-bar {
+        border-right: 1px solid lightgray;
         width: 270px;
         height: 100vh;
+        overflow-y: hidden;
         background-color: white;
         position: relative;
         transition: width 0.5s;
@@ -20,8 +22,8 @@ body {
             display: none;
         }
         .header {
-            height: 30px;
-            position: relative;
+            height: 40px;
+            padding: 5px;
             .option {
                 float: right;
                 font-size: 14px;
@@ -32,6 +34,14 @@ body {
         .main {
             height: calc(100vh - 62px);
             overflow-y: auto;
+            .saved-item {
+                padding: 5px;
+                border-top: solid 1px lightgray;
+                border-bottom: solid 1px lightgray;
+                a {
+                    text-decoration: none;
+                }
+            }
         }
         .footer {
             height: 30px;

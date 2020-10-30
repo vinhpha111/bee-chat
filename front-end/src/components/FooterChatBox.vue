@@ -1,8 +1,8 @@
 <template>
-    <div class="footer-chat-box">
-        <InputEditor @updateHeight="updateHeight" ref="input-editor" v-model="editorContent"/>
-        <button @click="sendMessage" class="send-btn w3-btn w3-green">
-            {{!sending ? 'send' : ''}}<i v-if="sending" class="fa fa-circle-o-notch fa-spin"></i>
+    <div :class="['footer-chat-box', classUnique]">
+        <InputEditor ref="input-editor" @updateHeight="updateHeight" v-model="editorContent"/>
+        <button @click="sendMessage" class="send-btn">
+            <i v-if="!sending" class="fa fa-send-o"></i><i v-if="sending" class="fa fa-circle-o-notch fa-spin"></i>
         </button>
     </div>
 </template>
@@ -17,7 +17,8 @@ export default {
     data() {
         return {
             editorContent: '',
-            sending: false
+            sending: false,
+            classUnique: (new Date()).getTime().toString()
         }
     },
     methods: {
@@ -49,8 +50,7 @@ export default {
             }
         },
         updateHeight(height) {
-            $('.list-msg-box').css('height', `calc(100vh - ${height + 40}px)`)
-            $('.footer-chat-box .send-btn').css('height', `${height}px`)
+            $(`.${this.classUnique}`).closest('.main-thread').find('.list-msg-box').css('height', `calc(100vh - ${height + 40}px)`)
         }
     }
 }
@@ -58,10 +58,20 @@ export default {
 <style lang="scss">
 .footer-chat-box {
     display: flex;
+    width: 100%;
+    position: relative;
+    .text-input {
+		width: calc(100% - 80px);
+	}
     .send-btn {
+        position: absolute;
         width: 80px;
-        height: 80px;
-        &:focus { outline: none; }
+        height: 100%;
+        right: 0;
+        top: 0;
+        background-color: #4CAF50;
+        outline: none;
+        border: none;
     }
 }
 </style>
