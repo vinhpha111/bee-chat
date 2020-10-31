@@ -4,10 +4,12 @@
 			<p class="label">Reply message</p>
 			<i @click="close()" class="fa fa-close close-btn"></i>
 		</div>
-		<MessageRow :message="messageReply" :is-thread="true"/>
-		<hr>
-		<MessageRow v-for="(child, index) in messageReply.childrens" :key="index" :message="child" :is-thread="true"/>
-		<FooterChatBox  type="reply" />
+		<div class="reply-message-main">
+			<MessageRow :message="messageReply" :is-thread="true"/>
+			<!-- <MessageRow v-for="(child, index) in messageReply.childrens" :key="index" :message="child" :is-thread="true"/> -->
+			<ListMessage v-if="messageReply.childrens" ref="listMsg" type="reply" :messages="messageReply.childrens" />
+			<FooterChatBox type="reply" :message="messageReply" />
+		</div>
 	</div>
 </template>
 
@@ -15,26 +17,30 @@
 import MessageRow from '../MessageRow'
 import FooterChatBox from '../FooterChatBox'
 import eventBus from '../../helper/eventBus'
+import ListMessage from '../ListMessage'
 export default {
 	components: {
 		MessageRow,
-		FooterChatBox
+		FooterChatBox,
+		ListMessage
 	},
 	data() {
 		return {
 			messageReply: null
 		}
 	},
-	mounted() {
-		this.init()
+	async mounted() {
+		await this.init()
 		const self = this
 		eventBus.$on('initReplyMessage', function() {
 			self.init()
 		})
 	},
 	methods: {
-		init() {
-			this.messageReply = this.$store.getters.getMessageReply
+		async init() {
+			this.messageReply = null //this.$store.getters.getMessageReply
+			this.messageReply = await this.$store.dispatch('getMessageById', this.$store.getters.getMessageReply._id).then(res => res.data)
+			// return msg
 		},
 		close() {
 			this.$store.commit('setMessageReply', null)
@@ -68,6 +74,11 @@ export default {
 				color: orange;
 			}
 		}
+	}
+
+	&-main {
+		max-height: calc(100vh - 40px);
+		overflow-y: auto;
 	}
 }
 </style>

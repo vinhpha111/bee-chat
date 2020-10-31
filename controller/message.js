@@ -13,5 +13,9 @@ module.exports = {
     removeEmoji: async (req, res) => {
         let emoji = await messageRepository.removeEmoji(req)
         return res.json(emoji)
+    },
+    getMessageById: async (req, res) => {
+        let message = await messageRepository.getMessageById(req.query._id)
+        return res.json(message)
     }
 }

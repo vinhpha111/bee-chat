@@ -1,6 +1,9 @@
 .list-msg-box {
     height: calc(100vh - 120px);
     overflow-y: auto;
+    &.no-scroll {
+        height: 100% !important;
+    }
 }
 
 .msg-item {

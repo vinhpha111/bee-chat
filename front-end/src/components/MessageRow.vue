@@ -27,7 +27,6 @@ export default {
     async created() {
         (async () => {
             await this.$store.dispatch('emitSocketCallback', {on: 'join', room: this.message._id,token: this.$store.getters.getToken})
-            await this.$store.dispatch('removeListenSocket', this.message._id)
             await this.listenSocker()
         })()
     },

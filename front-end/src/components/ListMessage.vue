@@ -1,8 +1,8 @@
 <template>
-<div class="list-msg-box">
+<div :class="['list-msg-box', {'no-scroll': type === 'reply'}, classUnique]">
     <div class="list-msg">
         <LoadingMessageSpin v-if="loadingMessageUp" />
-        <MessageRow v-for="(message, index) in listMessage" :message="message" :key="index" />
+        <MessageRow v-for="(message, index) in listMessage" :message="message" :key="index" :is-thread="type === 'reply'" />
     </div>
 </div>
 </template>
@@ -11,13 +11,14 @@ import MessageRow from './MessageRow'
 import LoadingMessageSpin from './LoadingMessageSpin'
 import { notifySound } from '../helper/sound'
 export default {
-    props: ['type'],
+    props: ['type', 'messages'],
     components: {
         MessageRow,
         LoadingMessageSpin
     },
     data() {
         return {
+            classUnique: (new Date()).getTime().toString(),
             listMessage: [],
             slugRoom: '',
             loadingMessageUp: false
@@ -52,22 +53,58 @@ export default {
                         return []
                     })
                 }
+                case 'reply': {
+                    return this.messages
+                }
             }
             return []
         },
         listenMessage() {
-            const room = this.$store.getters.getListRoom.find(room => room.slug === this.slugRoom )
-            this.$store.dispatch('onSocket', {
-                on: room._id,
-                callback: (data) => {
-                    const user = this.$store.getters.getUserInfo
-                    if (user._id !== data.message.author._id) {
-                        notifySound()
-                    }
-                    this.listMessage.push(data.message)
-                    this.keepPositionInScroll()
+            switch (this.type) {
+                case 'room': {
+                        const room = this.$store.getters.getListRoom.find(room => room.slug === this.slugRoom )
+                        this.$store.dispatch('onSocket', {
+                            on: room._id,
+                            callback: (data) => {
+                                const user = this.$store.getters.getUserInfo
+                                if (user._id !== data.message.author._id) {
+                                    notifySound()
+                                }
+                                if (!data.message.parent) {
+                                    this.listMessage.push(data.message)   
+                                } else {
+                                    this.addChildrenToMessage(data.message)
+                                }
+                                this.keepPositionInScroll()
+                            }
+                        })
+                    break
                 }
-            })
+                case 'reply': {
+                        const room = this.$store.getters.getListRoom.find(room => room.slug === this.slugRoom )
+                        this.$store.dispatch('onSocket', {
+                            on: room._id,
+                            callback: (data) => {
+                                const user = this.$store.getters.getUserInfo
+                                if (user._id !== data.message.author._id) {
+                                    notifySound()
+                                }
+                                this.listMessage.push(data.message)
+                            }
+                        })
+                    break
+                }
+            
+                default:
+                    break;
+            }
+        },
+        addChildrenToMessage(children) {
+            for (let i = 0; i < this.listMessage.length; i++) {
+                if (children.parent === this.listMessage[i]._id) {
+                    this.listMessage[i].childrens.push(children)
+                }
+            }
         },
         scrollTobottom() {
             setTimeout(() => {
@@ -100,17 +137,13 @@ export default {
             this.keepPositionInScroll()
         },
         addScrollListener() {
-            const scrollBar = document.getElementsByClassName('list-msg-box')[0]
+            const scrollBar = document.getElementsByClassName(this.classUnique)[0]
             scrollBar.onscroll = () => {
                 if (scrollBar.scrollTop === 0) {
                     this.loadPrevious()
                 }
             }
         }
-    },
-    destroyed() {
-        const room = this.$store.getters.getListRoom.find(room => room.slug === this.slugRoom)
-        this.$store.dispatch('removeListenSocket', room._id)
     },
 }
 </script>

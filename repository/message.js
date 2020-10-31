@@ -90,7 +90,7 @@ module.exports = {
         let message = new messageModel({ author, content, type, in_room, user_not_see, parent, created_at, updated_at })
         await message.save()
         try {
-            message = (await module.exports.getMessageById(message._id))[0]
+            message = await module.exports.getMessageById(message._id)
             messageSocket.emitMessageToUserByRoom({
                 listUser: userInRoom,
                 room: in_room,
@@ -102,6 +102,7 @@ module.exports = {
         return message
     },
     getMessageById: async (id) => {
+        id = mongoose.Types.ObjectId(id)
         const getAuthor = [
             {
                 $lookup: {
@@ -154,9 +155,9 @@ module.exports = {
             {
                 $sort: {_id: -1}
             },
-            { $limit : 10 }
+            { $limit : 1 }
         ].concat(getAuthor)).exec()
-        return messages
+        return messages ? messages[0] : null
     },
     addEmoji: async (req, type) => {
         let data = {

@@ -29,6 +29,13 @@ const actions = {
     },
     removeEmoji: (state, req) => {
         return axios.post('message/remove-emoji', req)
+    },
+    getMessageById: (state, _id) => {
+        return axios.get('message/get-by-id', {
+            params: {
+                _id
+            }
+        })
     }
 }
 

@@ -10,7 +10,7 @@
 import InputEditor from '../components/TextInputChat'
 import $ from 'jquery'
 export default {
-    props: ['type'],
+    props: ['type', 'message'],
     components: {
         InputEditor
     },
@@ -45,6 +45,22 @@ export default {
                     })
                     break;
                 }
+                case 'reply': {
+                    const content = this.editorContent
+                    let data = {
+                        content: content,
+                        roomId: this.message.in_room,
+                        parent: this.message._id
+                    }
+                    this.$store.dispatch('sendMessageInRoom', data).then(() => {
+                        this.editorContent = ''
+                        this.sending = false
+                        this.$refs['input-editor'].setHtml(this.editorContent)
+                    }).catch(() => {
+                        this.sending = false
+                    })
+                    break
+                }
                 default:
                     break;
             }
@@ -72,6 +88,7 @@ export default {
         background-color: #4CAF50;
         outline: none;
         border: none;
+        cursor: pointer;
     }
 }
 </style>
