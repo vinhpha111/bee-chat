@@ -146,7 +146,8 @@ module.exports = {
                             $match: { 
                                 $expr: { $eq: [ "$parent", "$$parent_id" ] }
                             }
-                        }
+                        },
+                        getEmoji
                     ].concat(getAuthor),
                     as: 'childrens'
                 }

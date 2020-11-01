@@ -16,7 +16,9 @@ const getters = {
 const mutations = {
     setMessageReply: (state, message) => {
         state.messageReply = message
-        eventBus.$emit('initReplyMessage', message)
+        if (message) {
+            eventBus.$emit('initReplyMessage', message)   
+        }
     }
 }
 
