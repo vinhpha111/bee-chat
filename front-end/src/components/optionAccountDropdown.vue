@@ -31,6 +31,7 @@ export default {
     right: 5px;
     top: 5px;
     background-color: white;
+    border: 1px solid darkgray;
     ul {
         list-style: none;
         padding: 0;

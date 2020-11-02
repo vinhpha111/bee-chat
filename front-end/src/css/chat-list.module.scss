@@ -10,8 +10,22 @@
     padding: 8px;
     padding-bottom: 3px;
     border-top: solid 1px lightgray;
+    display: flex;
     &:hover {
         background-color: rgba(173, 216, 230, 0.187);
+    }
+    .avatar-col {
+        width: 40px;
+        padding: 4px 0;
+        .avatar {
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+    }
+    .main-col {
+        width: calc(100% - 40px);
     }
     .list-msg-child {
         margin-top: 8px;

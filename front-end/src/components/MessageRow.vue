@@ -1,15 +1,20 @@
 <template>
     <div v-if="message" :class="['text-input-editor-view message-row msg-item w3-display-container']">
-        <label :class="[messageOwner ? 'w3-text-blue': 'w3-text-light-blue', 'w3-text-blue user-link']"><b>{{message.author.fullname}}</b></label>
-        <label :title="getDateTimeByFormat(message.created_at, '%y/%m/%d %h:%i')" 
-            class="w3-margin-left w3-text-blue-grey w3-tiny">
-            <i>{{getDateTimeByFormat(message.created_at, '%h:%i')}}</i>
-        </label>
-        <div class="content" v-html="message.content"></div>
-        <div class="msg-item-footer">
-            <span v-if="!isThread" class="reply" @click="replyMessage(message)" :title="getListUserInChild(message.childrens)"><i class="fa fa-share-square-o"></i> reply <i v-if="message.childrens.length > 0">({{message.childrens.length}})</i></span>
-            <span v-for="(emoji, index) in listEmoji" :key="index" :title="getListUserName(emoji.members)" @click="addEmoji(emoji.emoji)" class="emoji">{{emoji.emoji.char}} {{emoji.count}}</span>
-            <span class="add-emoji" :title="$t('message_item.add_emoji')" @click="showEmoji"><i class="fa fa-smile-o"></i></span>
+        <div class="avatar-col">
+            <img class="avatar" :src="message.author.avatar_path || getAvatarByName(message.author.fullname)">
+        </div>
+        <div class="main-col">
+            <label :class="[messageOwner ? 'w3-text-blue': 'w3-text-light-blue', 'w3-text-blue user-link']"><b>{{message.author.fullname}}</b></label>
+            <label :title="getDateTimeByFormat(message.created_at, '%y/%m/%d %h:%i')" 
+                class="w3-margin-left w3-text-blue-grey w3-tiny">
+                <i>{{getDateTimeByFormat(message.created_at, '%h:%i')}}</i>
+            </label>
+            <div class="content" v-html="message.content"></div>
+            <div class="msg-item-footer">
+                <span v-if="!isThread" class="reply" @click="replyMessage(message)" :title="getListUserInChild(message.childrens)"><i class="fa fa-share-square-o"></i> reply <i v-if="message.childrens.length > 0">({{message.childrens.length}})</i></span>
+                <span v-for="(emoji, index) in listEmoji" :key="index" :title="getListUserName(emoji.members)" @click="addEmoji(emoji.emoji)" class="emoji">{{emoji.emoji.char}} {{emoji.count}}</span>
+                <span class="add-emoji" :title="$t('message_item.add_emoji')" @click="showEmoji"><i class="fa fa-smile-o"></i></span>
+            </div>
         </div>
         <EmojiBox @selectEmoji="addEmoji" ref="emoji-box"/>
     </div>
@@ -18,6 +23,7 @@
 import EmojiBox from './EmojiBox/EmojiBox'
 import { orderBy } from 'lodash'
 import { SERVER } from '../helper/constant'
+import generateAvatarUrlFromName from '../helper/generateAvatarUrlFromName'
 export default {
     name: "MessageRow",
     props: ['message', 'is-thread'],
@@ -96,6 +102,9 @@ export default {
                 }
             }
             return listEmoji
+        },
+        getAvatarByName() {
+            return name => generateAvatarUrlFromName(name)
         }
     },
     methods: {

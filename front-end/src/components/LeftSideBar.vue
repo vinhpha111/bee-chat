@@ -1,6 +1,7 @@
 <template>
     <div class="">
         <div class="header">
+            <img class="avatar" :src="$store.getters.getUserInfo ? ( $store.getters.getUserInfo.avatar_path || getAvatarByName($store.getters.getUserInfo.fullname) ) : ''">
             <label>{{$store.getters.getUserInfo ? $store.getters.getUserInfo.fullname : ''}}</label>
             <i @click="showAccountDropdown = true" class="fa fa-gear option"></i>
             <optionAccountDropdown @close="showAccountDropdown = false" v-if="showAccountDropdown"/>
@@ -9,7 +10,7 @@
             <div class="saved-item"><router-link :to="''"><i class="fa fa-star-o"></i>{{$t('sidebar.saved_link')}}</router-link></div>
             <ListRoomInSidebar/>
         </div>
-        <div class="footer w3-pale-green">
+        <div class="footer">
             <i>Develop by: vinhpha111@gmail.com </i>
         </div>
     </div>
@@ -18,6 +19,7 @@
 <script>
 import ListRoomInSidebar from './ListRoomInSidebar'
 import optionAccountDropdown from './optionAccountDropdown'
+import generateAvatarUrlFromName from '../helper/generateAvatarUrlFromName'
 export default {
     components: {
         ListRoomInSidebar,
@@ -28,6 +30,11 @@ export default {
             showAccountDropdown: false
         }
     },
+    computed: {
+        getAvatarByName() {
+            return name => generateAvatarUrlFromName(name)
+        }
+    }
 
 }
 </script>

@@ -11,7 +11,8 @@ export default {
 <style lang="scss">
 .header-chat-box {
     height: 40px;
-    border-bottom: 2px solid rgba(173, 216, 230, 0.455);
+    border-bottom: 1px solid goldenrod;
+    background-color: #ffec87;
     .label {
 		font-size: 15px;
 		margin: 0;

@@ -7,38 +7,56 @@ const messageSocket = require('../socket/message')
 const { TYPE_OF_MESSAGE, TYPE_EMOJI } =  require('../config/constants')
 const { findByIdAndDelete } = require('../model/roomUser')
 
+const getAuthor = [
+    {
+        $lookup: {
+            from: 'users',
+            // localField: "author",
+            let: {author: "$author"},
+            // foreignField: "_id",
+            pipeline: [
+                {
+                    $match: { 
+                        $expr: { $eq: [ "$_id", "$$author" ] }
+                    }
+                },
+                {
+                    $addFields: {
+                        "avatar_path": { $cond: { if: "$avatar", then: { $concat: ['/avatar/', '$avatar'] }, else: null } }
+                    },
+                }
+            ],
+            as: "author"
+        }
+    },
+    {
+        $addFields: {
+            "author": { "$arrayElemAt": [ "$author", 0 ] }
+        },
+    },
+    {
+        $unset: ["author.hash_password", "author.refresh_token"]
+    }
+]
+const getEmoji = {
+    $lookup: {
+        from: 'message_emojis',
+        let: { message_id: "$_id" },
+        pipeline: [
+            {
+                $match: { 
+                    $expr: { $eq: [ "$message", "$$message_id" ] }
+                }
+            }
+        ].concat(getAuthor),
+        as: 'emojis'
+    }
+}
+
 module.exports = {
     getListMessageInRoom: async (slugRoom, query = {}) => {
         const exceptIds = (query.exceptIds || []).map(id => mongoose.Types.ObjectId(id))
         const room = await roomRepository.getRoomBySlug(slugRoom)
-        const getAuthor = [
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: "author",
-                    foreignField: "_id",
-                    as: "author"
-                }
-            },
-            { $addFields: { "author": { "$arrayElemAt": [ "$author", 0 ] } } },
-            {
-                $unset: ["author.hash_password", "author.refresh_token"]
-            }
-        ]
-        const getEmoji = {
-            $lookup: {
-                from: 'message_emojis',
-                let: { message_id: "$_id" },
-                pipeline: [
-                    {
-                        $match: { 
-                            $expr: { $eq: [ "$message", "$$message_id" ] }
-                        }
-                    }
-                ].concat(getAuthor),
-                as: 'emojis'
-            }
-        }
         if (room) {
             let messages = await messageModel.aggregate([
                 {
@@ -103,34 +121,6 @@ module.exports = {
     },
     getMessageById: async (id) => {
         id = mongoose.Types.ObjectId(id)
-        const getAuthor = [
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: "author",
-                    foreignField: "_id",
-                    as: "author"
-                }
-            },
-            { $addFields: { "author": { "$arrayElemAt": [ "$author", 0 ] } } },
-            {
-                $unset: ["author.hash_password", "author.refresh_token"]
-            }
-        ]
-        const getEmoji = {
-            $lookup: {
-                from: 'message_emojis',
-                let: { message_id: "$_id" },
-                pipeline: [
-                    {
-                        $match: { 
-                            $expr: { $eq: [ "$message", "$$message_id" ] }
-                        }
-                    }
-                ].concat(getAuthor),
-                as: 'emojis'
-            }
-        }
         let messages = await messageModel.aggregate([
             {
                 $match: {

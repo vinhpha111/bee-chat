@@ -85,7 +85,7 @@ export default {
         height: 100%;
         right: 0;
         top: 0;
-        background-color: #4CAF50;
+        background-color: gold;
         outline: none;
         border: none;
         cursor: pointer;

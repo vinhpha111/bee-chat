@@ -57,7 +57,8 @@ export default {
 		padding-left: 10px;
 		position: relative;
 		padding-top: 3px;
-		border: 1px solid darkgray;
+		border: 1px solid goldenrod;
+        background-color: #ffec87;
 		.label {
 			font-size: 15px;
 			margin: 0;
