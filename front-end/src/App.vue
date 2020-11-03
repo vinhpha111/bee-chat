@@ -46,4 +46,5 @@ export default {
 @import "./css/main.module.scss";
 @import "./css/text-editor.module.scss";
 @import "./css/edit-account.scss";
+@import "./css/component/user-info-modal.scss";
 </style>
