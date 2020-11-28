@@ -42,7 +42,8 @@
     "save_btn": "Save",
     "cancel_btn": "Cancel",
     "admin_role": "Admin",
-    "guest_role": "Guest"
+    "guest_role": "Guest",
+    "contact_btn": "Contact"
   },
   "validation": {
     "empty": "Cannot empty",

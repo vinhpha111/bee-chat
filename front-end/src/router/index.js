@@ -68,6 +68,15 @@ const routes = [
           auth: [1, 2],
           authInRoom: [1, 2]
         }
+      },
+      {
+        path: '/contact/:slug',
+        name: 'Contact',
+        component: () => import('../views/room/index.vue'),
+        meta: { 
+          auth: [1, 2],
+          authInRoom: [1, 2]
+        }
       }
     ]
   },
