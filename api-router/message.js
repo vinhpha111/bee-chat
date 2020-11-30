@@ -7,5 +7,6 @@ router.post('/get-message-by-slug-room', requiredAuth(), MessageController.getMe
 router.post('/add-emoji-by-char', requiredAuth(), MessageController.addEmojiByChar)
 router.post('/remove-emoji', requiredAuth(), MessageController.removeEmoji)
 router.get('/get-by-id', requiredAuth(), MessageController.getMessageById)
+router.post('/edit-message', requiredAuth(), MessageController.editMessage)
 
 module.exports = router

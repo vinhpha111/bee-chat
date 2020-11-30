@@ -19,7 +19,14 @@
   },
   "message_item": {
     "reply": "reply",
-    "add_emoji": "Add emoji"
+    "add_emoji": "Add emoji",
+    "edited": "Has edited",
+    "more_option": {
+      "save": "Save",
+      "edit": "Edit",
+      "delete": "Delete",
+      "copy": "Copy"
+    }
   },
   "account": {
     "name": "Name",

@@ -17,5 +17,16 @@ module.exports = {
   getMessageById: async (req, res) => {
     let message = await messageRepository.getMessageById(req.query._id)
     return res.json(message)
+  },
+  editMessage: async (req, res) => {
+    try {
+      const id = req.body.id
+      const content = req.body.content
+      const message = await messageRepository.edit({ id, content })
+      return res.json(message)
+    } catch (error) {
+      console.log(error)
+      return res.status(500).send(error)
+    }
   }
 }

@@ -38,6 +38,9 @@ const actions = {
                 _id
             }
         })
+    },
+    sendEditMessage: (state, data) => {
+        return axios.post('message/edit-message', data)
     }
 }
 
