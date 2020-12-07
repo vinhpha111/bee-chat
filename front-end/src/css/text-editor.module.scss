@@ -1,62 +1,82 @@
 .text-input {
+  width: 100%;
+
+  &-toolbar {
+    display: flex;
+    border: darkgray solid 1px;
+    border-bottom: none;
+    position: relative;
+
+    .icon {
+      font-size: 14px;
+      margin-right: 16px;
+      padding: 5px;
+      cursor: pointer;
+      opacity: 0.7;
+
+      &:hover {
+        background-color: darkgrey;
+        opacity: 1;
+      }
+
+      &.selected {
+        opacity: 1;
+      }
+
+      &-smile {
+        position: absolute;
+        right: 0;
+      }
+    }
+
+    .being-edit {
+      font-size: 14px;
+      color: darkgray;
+      margin-top: 4px;
+    }
+  }
+
+  &-editor {
+    min-height: 48px;
+    max-height: 88px;
     width: 100%;
-    &-toolbar {
-        display: flex;
-        border: darkgray solid 1px;
-        border-bottom: none;
-        position: relative;
-        .icon {
-            font-size: 14px;
-            margin-right: 16px;
-            padding: 5px;
-            cursor: pointer;
-            opacity: 0.7;
-            &:hover {
-                background-color: darkgrey;
-                opacity: 1;
-            }
-            &.selected {
-                opacity: 1;
-            }
-            &-smile {
-                position: absolute;
-                right: 0;
-            }
-        }
+    overflow-y: auto;
+    border: 1px solid darkgrey;
+    outline: none;
+    padding: 10px;
+
+    blockquote {
+      background-color: lightgoldenrodyellow;
+      padding: 0 10px;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-left: 5px;
+      margin-left: 0;
+      border-radius: 5px;
     }
-    &-editor {
-        min-height: 48px;
-        max-height: 88px;
-        width: 100%;
-        overflow-y: auto;
-        border: 1px solid darkgrey;
-        outline: none;
-        padding: 10px;
-        blockquote {
-            background-color: lightgoldenrodyellow;
-            padding: 0 10px;
-            margin-top: 0;
-            margin-bottom: 0;
-            padding-left: 5px;
-            margin-left: 0;
-            border-radius: 5px;
-        }
-        ul {
-            padding-inline-start: 20px;
-        }
+
+    ul {
+      padding-inline-start: 20px;
     }
-    &-editor-view {
-        blockquote {
-            background-color: lightgoldenrodyellow;
-            padding: 0 10px;
-            margin-top: 0;
-            margin-bottom: 0;
-            padding-left: 5px;
-            margin-left: 0;
-            border-radius: 5px;
-        }
-        ul {
-            padding-inline-start: 20px;
-        }
+
+    &__being-edit {
+      background-color: #f5f0b8fb;
     }
+  }
+
+  &-editor-view {
+    blockquote {
+      background-color: lightgoldenrodyellow;
+      padding: 0 10px;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-left: 5px;
+      margin-left: 0;
+      border-radius: 5px;
+    }
+
+    ul {
+      padding-inline-start: 20px;
+    }
+  }
 }

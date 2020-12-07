@@ -24,5 +24,12 @@ module.exports = {
       result: { emoji }
     }
     io.in(emoji.message).emit(emoji.message, res)
+  },
+  emitUpdateMessage: async (message) => {
+    const res = {
+      type: TYPE_EMIT_TO_MESSAGE.EDIT_MESSAGE,
+      result: { message }
+    }
+    io.in(message._id).emit(message._id, res)
   }
 }

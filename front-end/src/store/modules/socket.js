@@ -1,4 +1,5 @@
 import io from "socket.io-client"
+import uniqid from "uniqid"
 
 const STATUS_EMIT = {
   PENDING: 0,
@@ -55,7 +56,7 @@ const actions = {
   emitSocketCallback: (store, conf) => {
     return new Promise((resolve, reject) => {
       // emit socket
-      const index = new Date().getTime();
+      const index = uniqid();
       store.commit("changeSocketBeingEmit", { index, data: { status: STATUS_EMIT.PENDING } });
       conf.index = index
       store.dispatch("emitSocket", conf);

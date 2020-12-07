@@ -1,76 +1,124 @@
 .list-msg-box {
-    height: calc(100vh - 120px);
-    overflow-y: auto;
-    &.no-scroll {
-        height: 100% !important;
-    }
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+
+  &.no-scroll {
+    height: 100% !important;
+  }
 }
 
 .msg-item {
-    padding: 8px;
-    padding-bottom: 3px;
-    border-top: solid 1px lightgray;
-    display: flex;
-    &:hover {
-        background-color: rgba(173, 216, 230, 0.187);
+  padding: 8px;
+  padding-bottom: 3px;
+  border-top: solid 1px lightgray;
+  display: flex;
+
+  &:hover {
+    background-color: rgba(173, 216, 230, 0.187);
+  }
+
+  .avatar-col {
+    width: 40px;
+    padding: 4px 0;
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      object-fit: cover;
+      border-radius: 5px;
     }
-    .avatar-col {
-        width: 40px;
-        padding: 4px 0;
-        .avatar {
-            width: 36px;
-            height: 36px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
+  }
+
+  .main-col {
+    width: calc(100% - 40px);
+  }
+
+  .list-msg-child {
+    margin-top: 8px;
+
+    .msg-item-child {
+      margin: 0px auto;
     }
-    .main-col {
-        width: calc(100% - 40px);
+  }
+
+  .user-link {
+    cursor: pointer;
+  }
+
+  .more-option {
+    margin-left: 10px;
+    padding: 0;
+    position: relative;
+    &__icon {
+      color: darkgray;
+      cursor: pointer;
+      padding: 5px;
     }
-    .list-msg-child {
-        margin-top: 8px;
-        .msg-item-child {
-            margin: 0px auto;
-        }
-    }
-    .user-link {
+    &__dropdown {
+      margin: 0;
+      position: absolute;
+      left: 0;
+      top: 0;
+      list-style: none;
+      border: solid darkgrey 1px;
+      background-color: white;
+      padding: 0;
+      z-index: 100;
+      width: 100px;
+      li {
+        padding-left: 5px;
         cursor: pointer;
+        &:hover {
+          background-color: rgb(255, 246, 195);
+        }
+        &:nth-child(n + 2) {
+          border-top: solid darkgrey 1px;
+        }
+      }
+    }
+  }
+
+  .edited-label {
+    font-size: 12px;
+    color: darkgray;
+  }
+
+  .content {
+    padding: 5px;
+    border: solid 1px lightgray;
+    border-radius: 5px;
+  }
+
+  &-footer {
+    .reply {
+      font-size: 12px;
+      cursor: pointer;
+      color: green;
+
+      &:hover {
+        color: rgb(0, 208, 0);
+      }
     }
 
-    .content {
-        padding: 5px;
-        border: solid 1px lightgray;
-        border-radius: 5px;
+    .emoji {
+      cursor: pointer;
+      font-size: 14px;
+      border: 1px solid darkgrey;
+      border-radius: 7px;
+      padding: 2px;
+      color: rgb(70, 70, 70);
+      margin-left: 4px;
     }
 
-    &-footer {
-        .reply {
-            font-size: 12px;
-            cursor: pointer;
-            color: green;
-            &:hover {
-                color: rgb(0, 208, 0);
-            }
-        }
+    .add-emoji {
+      font-size: 14px;
+      margin-left: 10px;
+      opacity: 0.7;
+      cursor: pointer;
 
-        .emoji {
-            cursor: pointer;
-            font-size: 14px;
-            border: 1px solid darkgrey;
-            border-radius: 7px;
-            padding: 2px;
-            color: rgb(70, 70, 70);
-            margin-left: 4px;
-        }
-
-        .add-emoji {
-            font-size: 14px;
-            margin-left: 10px;
-            opacity: 0.7;
-            cursor: pointer;
-            &:hover {
-                opacity: 1;
-            }
-        }
+      &:hover {
+        opacity: 1;
+      }
     }
+  }
 }
