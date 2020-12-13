@@ -22,6 +22,26 @@ const mutations = {
   },
   addUserContact: (state, userContact) => {
     state.userContacts.push(userContact)
+  },
+  increaseNotify: (state, roomId, type = 'normal') => {
+    for (let index in state.listRoom) {
+      if (state.listRoom[index]._id === roomId && type === 'normal') {
+        state.listRoom[index].num_notify_normal ++
+      }
+      if (state.listRoom[index]._id === roomId && type === 'mention') {
+        state.listRoom[index].num_notify_mention ++
+      }
+    }
+  },
+  decreaseNotify: (state, roomId, type = 'normal') => {
+    for (let index in state.listRoom) {
+      if (state.listRoom[index]._id === roomId && type === 'normal' && state.listRoom[index].num_notify_normal > 0) {
+        state.listRoom[index].num_notify_normal --
+      }
+      if (state.listRoom[index]._id === roomId && type === 'mention' && state.listRoom[index].num_notify_mention > 0) {
+        state.listRoom[index].num_notify_mention --
+      }
+    }
   }
 }
 

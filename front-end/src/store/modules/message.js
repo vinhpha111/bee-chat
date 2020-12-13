@@ -41,6 +41,9 @@ const actions = {
     },
     sendEditMessage: (state, data) => {
         return axios.post('message/edit-message', data)
+    },
+    deleteMessageNotify: (state, id) => {
+        return axios.delete(`message/${id}/remove-notify`)
     }
 }
 

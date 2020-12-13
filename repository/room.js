@@ -1,7 +1,7 @@
 const roomUserModel = require('../model/roomUser')
 const roomModel = require('../model/room')
 const mongoose = require('mongoose')
-const { TYPE_ROOM } = require('../config/constants')
+const { TYPE_ROOM, TYPE_MESSAGE_NOTIFY } = require('../config/constants')
 const uniqid = require('uniqid')
 
 function getRoom(key, asField) {
@@ -30,15 +30,79 @@ function getRoom(key, asField) {
   ]
 }
 
+function getNotifyNumber(asField, type, userId) {
+  return [
+    {
+      $lookup: {
+        from: "message_notifies",
+        let: {
+          roomId: '$room'
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: [ "$$roomId", "$room" ]
+                  },
+                  {
+                    $eq: [ type, "$type" ]
+                  },
+                  {
+                    $eq: [ mongoose.Types.ObjectId(userId), "$user" ]
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        as: 'n_number'
+      }
+    },
+    {
+      $addFields: {
+        [asField]: { $size: '$n_number' }
+      }
+    },
+    { $project: { n_number: 0 } }
+  ]
+}
+
 module.exports = {
   getRoomByUser: async (userId) => {
-    let roomUserList = await roomUserModel.find({ user: userId }).populate('room').exec()
-    let rooms = []
-    for (let i in roomUserList) {
-      if (roomUserList[i].room && roomUserList[i].room.type === TYPE_ROOM.ROOM_NORMAL) {
-        rooms.push(roomUserList[i].room)
+    let rooms = await roomUserModel.aggregate([
+      ...getNotifyNumber('num_notify_normal', TYPE_MESSAGE_NOTIFY.NORMAL, userId),
+      ...getNotifyNumber('num_notify_mention', TYPE_MESSAGE_NOTIFY.MENTION, userId),
+      ...getRoom("room", "room"),
+      {
+        $match: {
+          $expr: {
+            $and: [
+              { $eq: ["$visible", true] },
+              { $eq: ["$room.type", TYPE_ROOM.ROOM_NORMAL] },
+              { $eq: [ "$user", mongoose.Types.ObjectId(userId) ] }
+            ]
+          }
+        }
+      },
+      {
+        $addFields: {
+          _id: '$room._id',
+          name: '$room.name',
+          slug: '$room.slug'
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          slug: 1,
+          num_notify_normal: 1,
+          num_notify_mention: 1
+        }
       }
-    }
+    ]).exec()
     return rooms
   },
   getListContactByUser: async (userId) => {

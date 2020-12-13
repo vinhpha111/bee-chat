@@ -8,5 +8,6 @@ router.post('/add-emoji-by-char', requiredAuth(), MessageController.addEmojiByCh
 router.post('/remove-emoji', requiredAuth(), MessageController.removeEmoji)
 router.get('/get-by-id', requiredAuth(), MessageController.getMessageById)
 router.post('/edit-message', requiredAuth(), MessageController.editMessage)
+router.delete('/:id/remove-notify', requiredAuth(), MessageController.removeNotify)
 
 module.exports = router

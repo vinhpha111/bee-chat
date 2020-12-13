@@ -7,7 +7,15 @@
       </li>
       <li v-for="(room, index) in $store.getters.getListRoom" :class="[{'active': checkActive(room.slug)}]"
         :key="index">
-        <router-link class="room-link" :to="`/room/${room.slug}`">{{room.name}}</router-link>
+        <router-link :class="['room-link', {'has-notify': true}]" :to="`/room/${room.slug}`">
+          {{room.name}}
+          <span
+            v-if="room.num_notify_mention || room.num_notify_normal"
+            :class="[{'mention-num-label': room.num_notify_mention}]"
+          >
+            {{ getNotifySign(room.num_notify_mention, room.num_notify_normal) }}
+          </span>
+        </router-link>
       </li>
     </ul>
     <ul class="list-room">
@@ -25,10 +33,12 @@
 </template>
 
 <script>
+  import { SERVER } from '../helper/constant';
   export default {
     created() {
       this.getListRoom()
       this.getListContact()
+      this.listenCommonEventUser()
     },
     methods: {
       getListRoom() {
@@ -40,6 +50,47 @@
         this.$store.dispatch('getListContactByUser').then(res => {
           this.$store.commit('setListContact', res.data)
         })
+      },
+      getNotifySign(mention = 0, normal = 0) {
+        if (mention > 0) {
+          return mention < 10 ? mention : '+9'
+        }
+        if (normal > 0) {
+          return '*'
+        }
+        return null
+      },
+      listenCommonEventUser() {
+        const self = this
+        this.$store.dispatch('onSocket', {
+          on: SERVER.EVENT_TO_COMMON_PER_USER,
+          callback: function (res) {
+            const type = res.type
+            switch (type) {
+              case SERVER.TYPE_EMIT_TO_COMMON.NEW_MESSAGE_NOTIFY:
+                self.eventOnNewMessageNotify(res.result)
+                break;
+              case SERVER.TYPE_EMIT_TO_COMMON.REMOVE_MESSAGE_NOTIFY:
+                self.eventOnRemoveMessageNotify(res.result)
+                break;
+              default:
+                break;
+            }
+          }
+        })
+      },
+      eventOnNewMessageNotify(messageNotify) {
+        this.$store.commit(
+          'increaseNotify',
+          messageNotify.room, messageNotify.type === SERVER.TYPE_MESSAGE_NOTIFY.NORMAL ? 'normal' : 'mention'
+        )
+        
+      },
+      eventOnRemoveMessageNotify(messageNotify) {
+        this.$store.commit(
+          'decreaseNotify',
+          messageNotify.room, messageNotify.type === SERVER.TYPE_MESSAGE_NOTIFY.NORMAL ? 'normal' : 'mention'
+        )
       }
     },
     computed: {
