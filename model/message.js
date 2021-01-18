@@ -9,7 +9,6 @@ const schema = new mongoose.Schema({
     type: Number, // 1: in_room, 2: in_user
     in_room: { type: Schema.Types.ObjectId, ref: Room },
     in_user: { type: Schema.Types.ObjectId, ref: User },
-    user_not_see: [{ type: Schema.Types.ObjectId, ref: User }],
     parent: { type: Schema.Types.ObjectId, ref: 'messages' },
     created_at: Date,
     updated_at: Date

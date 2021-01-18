@@ -11,7 +11,7 @@
 </script>
 <style lang="scss">
   .header-chat-box {
-    height: 40px;
+    height: 39px;
     border-bottom: 1px solid goldenrod;
     background-color: #ffec87;
 

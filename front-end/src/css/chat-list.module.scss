@@ -1,5 +1,5 @@
 .list-msg-box {
-  height: calc(100vh - 120px);
+  height: calc(100vh - 140px);
   overflow-y: auto;
 
   &.no-scroll {
@@ -15,6 +15,10 @@
 
   &:hover {
     background-color: rgba(173, 216, 230, 0.187);
+  }
+
+  &.has-notify {
+    background-color: rgb(255, 251, 223);
   }
 
   .avatar-col {

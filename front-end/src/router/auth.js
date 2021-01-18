@@ -11,14 +11,8 @@ export default async (to, from, next) => {
         store.commit('setUserInfo', currentUser)
 
         // join socket
-        await store.dispatch('instanceSocket', 'http://localhost:4000').then(function(){
-          console.log('has connect socket');
-        })
-        store.dispatch('emitSocketCallback', {on: 'join', token: store.getters.getToken}).then(res => {
-          console.log(res)
-        }).catch(function(err){
-          console.log(err)
-        })
+        await store.dispatch('instanceSocket', 'http://127.0.0.1:4000')
+        await store.dispatch('emitSocketCallback', {on: 'join', token: store.getters.getToken})
       }
     } catch (error) {
       console.log(error)

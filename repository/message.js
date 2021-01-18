@@ -4,8 +4,9 @@ const messageModel = require('../model/message')
 const roomUserModel = require('../model/roomUser')
 const messageEmojiModel = require('../model/messageEmoji')
 const messageSocket = require('../socket/message')
-const { TYPE_OF_MESSAGE, TYPE_EMOJI } = require('../config/constants')
+const { TYPE_OF_MESSAGE, TYPE_EMOJI, TYPE_MESSAGE_NOTIFY } = require('../config/constants')
 const { findByIdAndDelete } = require('../model/roomUser')
+const messageNotifyRepository = require('./messageNotify')
 
 const getAuthor = [{
     $lookup: {
@@ -68,7 +69,7 @@ const getEmoji = {
 }
 
 module.exports = {
-  getListMessageInRoom: async (slugRoom, query = {}) => {
+  getListMessageInRoom: async (slugRoom, query = {}, userId = null) => {
     const exceptIds = (query.exceptIds || []).map(id => mongoose.Types.ObjectId(id))
     const room = await roomRepository.getRoomBySlug(slugRoom)
     if (room) {
@@ -109,6 +110,35 @@ module.exports = {
             as: 'childrens'
           }
         },
+        // check exist notify
+        {
+          $lookup: {
+            from: 'message_notifies',
+            let: {
+              message: "$_id"
+            },
+            pipeline: [{
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$message", "$$message"] },
+                      { $eq: ["$user", mongoose.Types.ObjectId(userId)] }
+                    ]
+                  }
+                }
+              }
+            ],
+            as: 'notify'
+          }
+        },
+        {
+          $addFields: {
+            "notify": {
+              $cond: { if: { $gte: [ { $size: "$notify"}, 1 ] }, then: true, else: false }
+            }
+          },
+        },
+
         getEmoji,
         {
           $sort: {
@@ -132,7 +162,7 @@ module.exports = {
       room: in_room
     })
     userInRoom = userInRoom.map(userRoom => userRoom.user)
-    const user_not_see = userInRoom.filter(user => user != author)
+    const userNotSee = userInRoom.filter(user => user != author)
     const parent = req.body.parent || null
     const nowTime = (new Date()).getTime()
     const created_at = nowTime
@@ -142,12 +172,17 @@ module.exports = {
       content,
       type,
       in_room,
-      user_not_see,
       parent,
       created_at,
       updated_at
     })
     await message.save()
+    messageNotifyRepository.addManyUser({
+      users: userNotSee,
+      room: in_room,
+      message: message._id,
+      type: TYPE_MESSAGE_NOTIFY.NORMAL
+    })
     try {
       message = await module.exports.getMessageById(message._id)
       messageSocket.emitMessageToUserByRoom({

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="message" :class="['text-input-editor-view message-row msg-item w3-display-container']">
+  <div v-if="message" :class="['text-input-editor-view message-row msg-item', classUnique, { 'has-notify': message.notify }]">
     <div class="avatar-col">
       <a href="#" @click="showModalUserEvent($event, message.author)"><img class="avatar"
           :src="message.author.avatar_path || getAvatarByName(message.author.fullname)"></a>
@@ -55,11 +55,13 @@
   import UserInfoModal from './UserInfoModal'
   import OptionMessageDropdown from './OptionMessageDropdown'
   import eventBus from '../helper/eventBus'
+  import $ from "jquery"
   export default {
     name: "MessageRow",
     props: ['message', 'is-thread'],
     data() {
       return {
+        classUnique: (new Date()).getTime().toString(),
         showModalUser: false,
         modalUserData: null
       }
@@ -76,6 +78,8 @@
         token: this.$store.getters.getToken
       })
       await this.listenSocker()
+
+      this.setHasViewInterval()
     },
     watch: {
       async message() {
@@ -235,6 +239,18 @@
           message: this.message
         }
         eventBus.$emit('setEditMessage', data)
+      },
+      setHasViewInterval() {
+        const self = this
+        if (self.message.notify === true || self.message.parent) {
+          let overLoopCheckView = setInterval(() => {
+            const topPos = $(`.${self.classUnique}`).position().top
+            if (topPos > 0 && topPos < $('body').height()) {
+              self.$store.dispatch('deleteMessageNotify', self.message._id)
+              clearInterval(overLoopCheckView)
+            }
+          }, 500)
+        }
       }
     },
   }
