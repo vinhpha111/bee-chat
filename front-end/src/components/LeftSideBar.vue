@@ -2,7 +2,7 @@
     <div class="">
         <div class="header">
             <img class="avatar" :src="$store.getters.getUserInfo ? ( $store.getters.getUserInfo.avatar_path || getAvatarByName($store.getters.getUserInfo.fullname) ) : ''">
-            <label>{{$store.getters.getUserInfo ? $store.getters.getUserInfo.fullname : ''}}</label>
+            <label class="username">{{$store.getters.getUserInfo ? $store.getters.getUserInfo.fullname : ''}}</label>
             <i @click="showAccountDropdown = true" class="fa fa-gear option"></i>
             <optionAccountDropdown @close="showAccountDropdown = false" v-if="showAccountDropdown"/>
         </div>

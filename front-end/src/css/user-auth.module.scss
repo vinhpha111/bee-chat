@@ -1,16 +1,62 @@
 .auth-page {
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-    left: 0px;
-    top: 0px;
-    background-color: darkgrey;
-    text-align: center;
-    .login-box, .register-box {
-        width: 400px;
-        margin: 100px auto 0px auto;
-        background-color: white;
-        padding: 5px;
-        text-align: left;
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  left: 0px;
+  top: 0px;
+  background-color: darkgrey;
+  text-align: center;
+
+  .login-box,
+  .register-box {
+    width: 400px;
+    margin: 100px auto 0px auto;
+    background-color: white;
+    padding: 0 5px;
+    text-align: left;
+
+    &__header {
+      width: 100%;
+      height: 24px;
+      text-align: center;
+      font-size: 16px;
+      padding-top: 5px;
     }
+
+    &__main {
+      padding: 10px;
+
+      &__row {
+        display: flex;
+
+        &:nth-child(n + 1) {
+          margin-top: 10px;
+        }
+
+        &__label {
+          width: 80px;
+        }
+
+        &__input {
+          width: calc(100% - 80px);
+
+          input {
+            width: 100%;
+          }
+
+          padding: 0 7px;
+        }
+      }
+
+      &__submit-btn {
+        width: 100%;
+        margin-top: 10px;
+        height: 28px;
+        cursor: pointer;
+        background-color: green;
+        border: none;
+        color: white;
+      }
+    }
+  }
 }
