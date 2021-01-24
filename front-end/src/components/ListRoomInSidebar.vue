@@ -7,7 +7,7 @@
       </li>
       <li v-for="(room, index) in $store.getters.getListRoom" :class="[{'active': checkActive(room.slug)}]"
         :key="index">
-        <router-link :class="['room-link', {'has-notify': true}]" :to="`/room/${room.slug}`">
+        <router-link :class="['room-link', {'has-notify': room.num_notify_mention || room.num_notify_normal}]" :to="`/room/${room.slug}`">
           {{room.name}}
           <span
             v-if="room.num_notify_mention || room.num_notify_normal"
@@ -24,8 +24,14 @@
       </li>
       <li v-for="(userContact, index) in $store.getters.userContacts"
         :class="[{'active': checkActive(userContact.room.slug)}]" :key="index">
-        <router-link class="room-link" :to="`/contact/${userContact.room.slug}`">
-          {{userContact.user.fullname}}
+        <router-link :class="['room-link', {'has-notify': userContact.num_notify_mention || userContact.num_notify_normal}]" :to="`/contact/${userContact.room.slug}`">
+            {{userContact.user.fullname}}
+            <span
+              v-if="userContact.num_notify_mention || userContact.num_notify_normal"
+              :class="[{'mention-num-label': userContact.num_notify_mention}]"
+            >
+              {{ getNotifySign(userContact.num_notify_mention, userContact.num_notify_normal) }}
+            </span>
         </router-link>
       </li>
     </ul>

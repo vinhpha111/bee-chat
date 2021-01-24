@@ -8,15 +8,15 @@
       <div class="header">
         <label
           @click="showModalUserEvent($event, message.author)"
-          :class="[messageOwner ? 'w3-text-blue': 'w3-text-light-blue', 'w3-text-blue user-link']"
+          :class="[messageOwner ? 'owner-label': 'other-label', 'user-link']"
         >
-          <b>{{message.author.fullname}}</b>
+          {{message.author.fullname}}
         </label>
         <label
           :title="createdAt"
-          class="w3-margin-left w3-text-blue-grey w3-tiny"
+          class="time"
         >
-          <i>{{ createdAt }}</i>
+          {{ createdAt }}
         </label>
         <label class="more-option">
           <i @click="showMoreOption()" class="fa fa-ellipsis-v more-option__icon"></i>
@@ -248,6 +248,7 @@
             if (topPos > 0 && topPos < $('body').height()) {
               self.$store.dispatch('deleteMessageNotify', self.message._id)
               clearInterval(overLoopCheckView)
+              self.message.notify = false
             }
           }, 500)
         }

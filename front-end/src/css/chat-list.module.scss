@@ -12,6 +12,8 @@
   padding-bottom: 3px;
   border-top: solid 1px lightgray;
   display: flex;
+  animation-name: fadeout;
+  animation-duration: 2s;
 
   &:hover {
     background-color: rgba(173, 216, 230, 0.187);
@@ -19,6 +21,7 @@
 
   &.has-notify {
     background-color: rgb(255, 251, 223);
+    animation-name: null;
   }
 
   .avatar-col {
@@ -35,6 +38,21 @@
 
   .main-col {
     width: calc(100% - 40px);
+    .header {
+      .owner-label {
+        color: blue;
+        font-weight: bold;
+      }
+      .other-label {
+        font-weight: lighter;
+      }
+      .time {
+        font-size: smaller;
+        font-style: italic;
+        margin-left: 5px;
+        color: darkgrey;
+      }
+    }
   }
 
   .list-msg-child {

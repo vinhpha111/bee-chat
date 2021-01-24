@@ -106,22 +106,56 @@ module.exports = {
     return rooms
   },
   getListContactByUser: async (userId) => {
-    let roomIds = await roomUserModel.aggregate([
+    let contacts = await roomUserModel.aggregate([
+      ...getNotifyNumber('num_notify_normal', TYPE_MESSAGE_NOTIFY.NORMAL, userId),
+      ...getNotifyNumber('num_notify_mention', TYPE_MESSAGE_NOTIFY.MENTION, userId),
       ...getRoom("room", "room"),
+      {
+        $lookup: {
+          from: "users",
+          let: { userId: '$user' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: [ "$$userId", mongoose.Types.ObjectId(userId) ] },
+                    { $ne: [ "$_id", mongoose.Types.ObjectId(userId) ] }
+                  ]
+                }
+              }
+            }
+          ],
+          as: 'userContact'
+        }
+      },
+      {
+        $addFields: {
+          'userId': '$user',
+          'user': { "$arrayElemAt": [ '$userContact', 0 ] },
+        }
+      },
       {
         $match: {
           $expr: {
             $and: [
               { $eq: ["$visible", true] },
               { $eq: ["$room.type", TYPE_ROOM.CONTACT_USER] },
-              { $eq: [ "$user", mongoose.Types.ObjectId(userId) ] }
+              { $eq: [ "$userId", mongoose.Types.ObjectId(userId) ] }
             ]
           }
         }
+      },
+      {
+        $project: {
+          userContact: 0,
+          'user.hash_password': 0,
+          'user.refresh_token': 0,
+        }
       }
     ]).exec()
-    roomIds = roomIds.map(item => item.room?._id)
-    let contacts = await roomUserModel.find({ room: { "$in": roomIds }, user: { $ne: userId } }).populate(["room", "user"]).exec()
+    // roomIds = roomIds.map(item => item.room?._id)
+    // let contacts = await roomUserModel.find({ room: { "$in": roomIds }, user: { $ne: userId } }).populate(["room", "user"]).exec()
     return contacts
   },
   getRoomBySlug: async (slug) => {
