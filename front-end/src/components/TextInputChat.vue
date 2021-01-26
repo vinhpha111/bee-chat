@@ -18,7 +18,7 @@
           class="fa fa-smile-o"></i></a>
       <i v-show="beingEdit" class="being-edit">being edit</i>
     </div>
-    <div @click="checkActiveToolbar(); updateCurentSelection()" @keyup="checkActiveToolbar(); updateCurentSelection()"
+    <div @click="checkActiveToolbar(); updateCurentSelection()" @keyup="checkActiveToolbar(); updateCurentSelection(); emitTyping()"
       @input="emitHtml" :id="idUniqueDivEdit" contenteditable="true"
       :class="['text-input-editor', { 'text-input-editor__being-edit': beingEdit }]">
     </div>
@@ -30,7 +30,7 @@ import $ from "jquery";
 import _ from "lodash";
 import EmojiBox from "./EmojiBox/EmojiBox";
 export default {
-  props: ["value", 'being-edit'],
+  props: ["value", 'being-edit', 'roomId'],
   components: {
     EmojiBox,
   },
@@ -71,6 +71,7 @@ export default {
   created() {
     this.updateHtml(this.value);
     this.emitHtml();
+    this.listenSocket()
   },
   methods: {
     format(type, value = null) {
@@ -227,6 +228,25 @@ export default {
     showEmojiBox(event) {
       this.$refs["emoji-box"].show(event.clientX, event.clientY);
     },
+    emitTyping: function() {
+      if (this.roomId) {
+        this.$store.dispatch('emitSocket', {
+          on: 'typing',
+          room: this.roomId,
+          token: this.$store.getters.getToken
+        })
+      }
+    },
+    listenSocket: function() {
+      if (this.roomId) {
+        this.$store.dispatch('onSocket', {
+          on: this.roomId,
+          callback: function(data) {
+            console.log(data)
+          }
+        })
+      }
+    }
   },
 };
 </script>

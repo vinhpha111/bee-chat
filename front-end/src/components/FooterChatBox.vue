@@ -1,6 +1,6 @@
 <template>
   <div :class="['footer-chat-box', classUnique]">
-    <InputEditor :being-edit="editMessage" :ref="`input-editor-${classUnique}`" @updateHeight="updateHeight" v-model="editorContent" />
+    <InputEditor :roomId="roomId" :being-edit="editMessage" :ref="`input-editor-${classUnique}`" @updateHeight="updateHeight" v-model="editorContent" />
     <button @click="sendMessage" class="send-btn">
       <i v-if="!sending" class="fa fa-send-o"></i><i v-if="sending" class="fa fa-circle-o-notch fa-spin"></i>
     </button>
@@ -11,7 +11,7 @@
   import $ from 'jquery'
   import eventBus from '../helper/eventBus'
   export default {
-    props: ['type', 'message'],
+    props: ['type', 'message', 'roomId'],
     components: {
       InputEditor
     },

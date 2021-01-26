@@ -40,5 +40,17 @@ module.exports = (io) => {
         io.in(req.user._id).emit('updateSocketBeingEmit', req);
       }
     })
+
+    // on typing both room and message
+    socket.on('typing', async (req) => {
+      const room = req.room
+      req = await require('./auth/getUserByToken')(req)
+      if (req.user) {
+        const res = {
+          result: req.user
+        }
+        io.in(room).emit(room, res)
+      }
+    })
   });
 }

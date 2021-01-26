@@ -17,7 +17,8 @@ export const SERVER = {
     IN_USER: 2
   },
   TYPE_EMIT_TO_ROOM: {
-    NEW_MESSAGE: 1
+    NEW_MESSAGE: 1,
+    TYPING: 2
   },
   TYPE_EMIT_TO_MESSAGE: {
     ADD_EMOJI: 1,

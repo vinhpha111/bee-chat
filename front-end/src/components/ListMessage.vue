@@ -10,6 +10,7 @@
 <script>
   import MessageRow from './MessageRow'
   import LoadingMessageSpin from './LoadingMessageSpin'
+  import { SERVER } from '../helper/constant'
   import {
     notifySound
   } from '../helper/sound'
@@ -71,16 +72,18 @@
             this.$store.dispatch('onSocket', {
               on: room._id,
               callback: (data) => {
-                const user = this.$store.getters.getUserInfo
-                if (user._id !== data.message.author._id) {
-                  notifySound()
+                if(data.type === SERVER.TYPE_EMIT_TO_ROOM.NEW_MESSAGE) {
+                  const user = this.$store.getters.getUserInfo
+                  if (user._id !== data.message.author._id) {
+                    notifySound()
+                  }
+                  if (!data.message.parent) {
+                    this.listMessage.push(data.message)
+                  } else {
+                    this.addChildrenToMessage(data.message)
+                  }
+                  this.keepPositionInScroll()
                 }
-                if (!data.message.parent) {
-                  this.listMessage.push(data.message)
-                } else {
-                  this.addChildrenToMessage(data.message)
-                }
-                this.keepPositionInScroll()
               }
             })
             break
