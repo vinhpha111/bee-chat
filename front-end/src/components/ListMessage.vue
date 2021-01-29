@@ -93,14 +93,16 @@
             this.$store.dispatch('onSocket', {
               on: room._id,
               callback: (data) => {
-                const user = this.$store.getters.getUserInfo
-                if (this.parent._id !== data.message.parent) {
-                  return false
+                if(data.type === SERVER.TYPE_EMIT_TO_ROOM.NEW_MESSAGE) {
+                  const user = this.$store.getters.getUserInfo
+                  if (this.parent._id !== data.message.parent) {
+                    return false
+                  }
+                  if (user._id !== data.message.author._id) {
+                    notifySound()
+                  }
+                  this.listMessage.push(data.message)
                 }
-                if (user._id !== data.message.author._id) {
-                  notifySound()
-                }
-                this.listMessage.push(data.message)
               }
             })
             break

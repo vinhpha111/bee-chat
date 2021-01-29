@@ -1,5 +1,15 @@
 .text-input {
   width: 100%;
+  position: relative;
+
+  &-user-typing {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    height: 20px;
+    margin: 0;
+    background-color: white;
+  }
 
   &-toolbar {
     display: flex;

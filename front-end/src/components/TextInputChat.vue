@@ -1,5 +1,6 @@
 <template>
   <div :class="['text-input', classUnique]">
+    <p v-if="showListUserTyping" class="text-input-user-typing">{{ showListUserTyping }}</p>
     <div :class="['text-input-toolbar']">
       <a :class="['icon', { 'selected': toolBarActive.italic.active}]" href="javascript:void(0)"
         @click="format('italic'); toolBarActive.italic.active = !toolBarActive.italic.active"><i
@@ -29,6 +30,7 @@
 import $ from "jquery";
 import _ from "lodash";
 import EmojiBox from "./EmojiBox/EmojiBox";
+import { SERVER } from '../helper/constant'
 export default {
   props: ["value", 'being-edit', 'roomId'],
   components: {
@@ -66,12 +68,23 @@ export default {
         start: 0,
         end: 0,
       },
+      typing: false,
+      listUserTyping: [],
     };
   },
   created() {
     this.updateHtml(this.value);
     this.emitHtml();
     this.listenSocket()
+  },
+  computed: {
+    showListUserTyping() {
+      if (this.listUserTyping.length > 0) {
+        const list = _.join(this.listUserTyping, ',')
+        return this.$t('room.list_user_typing', {list})
+      }
+      return null
+    }
   },
   methods: {
     format(type, value = null) {
@@ -229,20 +242,41 @@ export default {
       this.$refs["emoji-box"].show(event.clientX, event.clientY);
     },
     emitTyping: function() {
-      if (this.roomId) {
+      const self = this
+      if (this.roomId && !this.typing) {
+        this.typing = true
         this.$store.dispatch('emitSocket', {
           on: 'typing',
           room: this.roomId,
           token: this.$store.getters.getToken
         })
+        setTimeout(function() {
+          self.typing = false
+        }, 2000)
       }
     },
     listenSocket: function() {
+      const self = this
+      const timeoutRemoveUserTyping = {}
+      const user = this.$store.getters.getUserInfo
       if (this.roomId) {
         this.$store.dispatch('onSocket', {
           on: this.roomId,
           callback: function(data) {
-            console.log(data)
+            if (data.type === SERVER.TYPE_EMIT_TO_ROOM.TYPING && data.result?._id !== user._id) {
+              const user = data.result
+              if (_.indexOf(self.listUserTyping, user.fullname) === -1) {
+                self.listUserTyping.push(user.fullname)
+              }
+              if (timeoutRemoveUserTyping[user.fullname]) {
+                clearTimeout(timeoutRemoveUserTyping[user.fullname])
+              }
+              timeoutRemoveUserTyping[user.fullname] = setTimeout(function() {
+                self.listUserTyping = _.remove(self.listUserTyping, function (username) {
+                  username === user.fullname
+                })
+              }, 3000)
+            }
           }
         })
       }

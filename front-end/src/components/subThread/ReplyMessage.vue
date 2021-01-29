@@ -9,7 +9,7 @@
       <!-- <MessageRow v-for="(child, index) in messageReply.childrens" :key="index" :message="child" :is-thread="true"/> -->
       <ListMessage v-if="messageReply.childrens" ref="listMsg" type="reply" :parent="messageReply"
         :messages="messageReply.childrens" />
-      <FooterChatBox type="reply" :message="messageReply" />
+      <FooterChatBox type="reply" :message="messageReply" :roomId="messageReply._id" />
     </div>
   </div>
 </template>

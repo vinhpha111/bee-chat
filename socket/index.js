@@ -1,5 +1,5 @@
-var jwt = require('jsonwebtoken')
-const jwtSecret = process.env.JWT_SECRET || 'secret'
+const userModel = require('../model/user')
+const constant = require('../config/constants')
 module.exports = (io) => {
   global.io = io
   io.on('connection', (socket) => {
@@ -46,8 +46,10 @@ module.exports = (io) => {
       const room = req.room
       req = await require('./auth/getUserByToken')(req)
       if (req.user) {
+        const user = await userModel.findById(req.user._id)
         const res = {
-          result: req.user
+          type: constant.TYPE_EMIT_TO_ROOM.TYPING,
+          result: user
         }
         io.in(room).emit(room, res)
       }

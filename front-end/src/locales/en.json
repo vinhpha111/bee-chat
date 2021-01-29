@@ -60,5 +60,8 @@
     "avatar_not_valid": "Avatar is not valid",
     "max_size_avatar": "Max size is %{size}",
     "password_not_correct": "Password is not correct"
+  },
+  "room": {
+    "list_user_typing": "%{list} are typing..."
   }
 }
