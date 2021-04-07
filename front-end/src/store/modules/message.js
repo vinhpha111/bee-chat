@@ -44,6 +44,9 @@ const actions = {
     },
     deleteMessageNotify: (state, id) => {
         return axios.delete(`message/${id}/remove-notify`)
+    },
+    deleteMessage: (state, id) => {
+        return axios.delete(`message/${id}`)
     }
 }
 
@@ -52,4 +55,4 @@ export default {
     getters,
     actions,
     mutations
-  }
+}

@@ -2,7 +2,7 @@
   <div :class="['list-msg-box', {'no-scroll': type === 'reply'}, classUnique]">
     <div class="list-msg">
       <LoadingMessageSpin v-if="loadingMessageUp" />
-      <MessageRow v-for="(message, index) in listMessage" :message="message" :key="index"
+      <MessageRow v-for="(message, index) in listMessage" @delete="deleteMessage(message._id)" :message="message" :key="index"
         :is-thread="type === 'reply'" />
     </div>
   </div>
@@ -11,6 +11,7 @@
   import MessageRow from './MessageRow'
   import LoadingMessageSpin from './LoadingMessageSpin'
   import { SERVER } from '../helper/constant'
+  import _ from 'lodash'
   import {
     notifySound
   } from '../helper/sound'
@@ -155,6 +156,16 @@
           if (scrollBar.scrollTop === 0) {
             this.loadPrevious()
           }
+        }
+      },
+      deleteMessage(id) {
+        const index = _.findIndex(this.listMessage, ['_id', id])
+        if (index !== -1) {
+          this.$delete(this.listMessage, index)
+        }
+        if (this.$store.getters['subThread/getType'] !== null && this.$store.getters.getMessageReply._id === id) {
+          this.$store.commit('setMessageReply', null)
+          this.$store.commit('subThread/setType', null)
         }
       }
     },

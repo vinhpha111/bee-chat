@@ -24,6 +24,7 @@
             :is-owner="message.author._id === $store.getters.getUserInfo._id"
             :ref="`msg-option`"
             @edit="setEditMessage()"
+            @remove="confirmRemoveMessage()"
           />
         </label>
         <label class="edited-label" v-if="message.created_at !== message.updated_at">{{ $t('message_item.edited') }}</label>
@@ -44,6 +45,7 @@
     </div>
     <EmojiBox @selectEmoji="addEmoji" ref="emoji-box" />
     <UserInfoModal v-if="showModalUser" @close="showModalUser = false" :user-data="modalUserData" />
+    <modalConfirm ref="modelConfirmRemoveMessage"  :message="$t('message.delete_this_message')" @ok="removeMessage()" />
   </div>
 </template>
 <script>
@@ -53,6 +55,7 @@
   import generateAvatarUrlFromName from '../helper/generateAvatarUrlFromName'
   import { getDateTimeByFormat } from '../helper/dateTime';
   import UserInfoModal from './UserInfoModal'
+  import ModalConfirm from './modalConfirm'
   import OptionMessageDropdown from './OptionMessageDropdown'
   import eventBus from '../helper/eventBus'
   import $ from "jquery"
@@ -69,7 +72,8 @@
     components: {
       EmojiBox,
       UserInfoModal,
-      OptionMessageDropdown
+      OptionMessageDropdown,
+      ModalConfirm,
     },
     async created() {
       await this.$store.dispatch('emitSocketCallback', {
@@ -83,12 +87,14 @@
     },
     watch: {
       async message() {
-        await this.$store.dispatch('emitSocketCallback', {
-          on: 'join',
-          room: this.message._id,
-          token: this.$store.getters.getToken
-        })
-        await this.listenSocker()
+        if (this.message) {
+          await this.$store.dispatch('emitSocketCallback', {
+            on: 'join',
+            room: this.message._id,
+            token: this.$store.getters.getToken
+          })
+          await this.listenSocker()
+        }
       }
     },
     computed: {
@@ -239,6 +245,15 @@
           message: this.message
         }
         eventBus.$emit('setEditMessage', data)
+      },
+      confirmRemoveMessage() {
+        this.$refs['modelConfirmRemoveMessage'].showModal()
+      },
+      removeMessage() {
+        const self = this
+        this.$store.dispatch('deleteMessage', this.message._id).then(function() {
+          self.$emit('delete')
+        })
       },
       setHasViewInterval() {
         const self = this

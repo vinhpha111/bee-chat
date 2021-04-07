@@ -63,5 +63,8 @@
   },
   "room": {
     "list_user_typing": "%{list} are typing..."
+  },
+  "message": {
+    "delete_this_message": "You will delete this message?"
   }
 }

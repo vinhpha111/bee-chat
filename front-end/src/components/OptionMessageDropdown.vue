@@ -3,7 +3,7 @@
     <li><i class="fa fa-bookmark-o"></i> {{ $t('message_item.more_option.save') }}</li>
     <li v-if="isOwner" @click="edit()"><i class="fa fa-edit"></i> {{ $t('message_item.more_option.edit') }}</li>
     <li><i class="fa fa-copy"></i> {{ $t('message_item.more_option.copy') }}</li>
-    <li v-if="isOwner" style="color: red;"><i class="fa fa-remove"></i> {{ $t('message_item.more_option.delete') }}</li>
+    <li v-if="isOwner" @click="remove()" style="color: red;"><i class="fa fa-remove"></i> {{ $t('message_item.more_option.delete') }}</li>
   </ul>
 </template>
 
@@ -37,6 +37,10 @@
       },
       edit() {
         this.$emit('edit')
+        this.hide()
+      },
+      remove() {
+        this.$emit('remove')
         this.hide()
       }
     }

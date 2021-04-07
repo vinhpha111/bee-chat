@@ -42,5 +42,18 @@ module.exports = {
       console.log(error)
       return res.status(500).send(error)
     }
+  },
+  remove: async (req, res) => {
+    try {
+      const message = await messageRepository.getMessageById(req.params.id)
+      if (!message) {
+        return res.status(404);
+      }
+      await messageRepository.remove(message._id)
+      return res.json(true)
+    } catch (error) {
+      console.log(error)
+      return res.status(500).send(error)
+    }
   }
 }

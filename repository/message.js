@@ -3,6 +3,7 @@ const roomRepository = require('./room')
 const messageModel = require('../model/message')
 const roomUserModel = require('../model/roomUser')
 const messageEmojiModel = require('../model/messageEmoji')
+const messageNotifyModel = require('../model/messageNotify')
 const messageSocket = require('../socket/message')
 const { TYPE_OF_MESSAGE, TYPE_EMOJI, TYPE_MESSAGE_NOTIFY } = require('../config/constants')
 const { findByIdAndDelete } = require('../model/roomUser')
@@ -273,5 +274,11 @@ module.exports = {
     await message.save()
     messageSocket.emitUpdateMessage(message)
     return message
+  },
+  remove: async (id) => {
+    await messageNotifyModel.deleteMany({message: id})
+    await messageEmojiModel.deleteMany({message: id})
+    await messageModel.deleteOne({_id: id})
+    return true
   }
 }
